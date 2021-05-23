@@ -11,13 +11,6 @@ Window {
     visible: true
     title: qsTr("Temaki")
 
-    /*
-    Loader {
-        source:"Home.qml";
-        width: parent.width;
-        height: parent.height;
-    }*/
-
     StackView {
         id: stackView
         initialItem: Qt.resolvedUrl("pages/Login.qml")

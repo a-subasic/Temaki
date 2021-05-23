@@ -1,24 +1,49 @@
 import QtQuick 2.0
+import QtQuick.Layouts 1.13
 import QtQuick.Controls 2.14
-import QtQuick.Window 2.2
-import QtQuick.Layouts 1.3
 
-
-ToolBar {
-    id: toolbar
+Row {
+    width: parent.width
     height: 40
-    RowLayout {
-        anchors.right: parent.right
+
+    ToolBar {
+        id: headerToolbar
+        width: parent.width
+
+        ToolButton {
+            id: toolButton
+            anchors.left: parent.left
+            text: "\u2630"
+            font.pixelSize: Qt.application.font.pixelSize * 1.6
+            onClicked: {
+                if (sidebar.depth > 1) {
+                    sidebar.pop()
+                }
+                sidebar.open()
+            }
+        }
+
         Label {
+            text: "todo: Screen name"
+            anchors.left: toolButton.right
+            anchors.verticalCenter: parent.verticalCenter
+        }
+
+        Label {
+            text: "todo: Project name"
+            anchors.centerIn: parent
+        }
+
+        ToolButton {
+            anchors.right: logoutButton.left
             id: usernameLabel
             text: "TODO:username"
-            // Layout.fillWidth: true
         }
-        Button {
+        ToolButton {
+            anchors.right: parent.right
             id: logoutButton
             text: "LOGOUT"
             onClicked: todo.open()
         }
     }
 }
-

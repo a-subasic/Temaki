@@ -10,9 +10,13 @@
     <qresource prefix="/pages">
         <file>Login.qml</file>
         <file>Register.qml</file>
+        <file>Board.qml</file>
+        <file>Members.qml</file>
+        <file>Analytics.qml</file>
+        <file>Labels.qml</file>
     </qresource>
-    <qresource prefix="/pages/components"/>
     <qresource prefix="/layouts">
+        <file>Body.qml</file>
         <file>Sidebar.qml</file>
         <file>Header.qml</file>
     </qresource>
