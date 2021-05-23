@@ -1,6 +1,9 @@
 #include <QGuiApplication>
 #include <QQmlApplicationEngine>
 #include <QIcon>
+#include <QtSql>
+#include <QSqlDatabase>
+#include <QDebug>
 
 int main(int argc, char *argv[])
 {
@@ -20,6 +23,14 @@ int main(int argc, char *argv[])
     engine.load(url);
 
     app.setWindowIcon(QIcon(":/images/temaki.png"));
+
+    QString path = qApp->applicationDirPath() + "/TaskManager.db";
+    QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE");
+    db.setHostName("127.0.0.1");
+    db.setDatabaseName(path);
+    if(!db.open()) {
+      qWarning() << "Database not connected.";
+    };
 
     return app.exec();
 }

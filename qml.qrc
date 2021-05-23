@@ -5,4 +5,7 @@
     <qresource prefix="/images">
         <file>temaki.png</file>
     </qresource>
+    <qresource prefix="/database">
+        <file>TaskManager.db</file>
+    </qresource>
 </RCC>
