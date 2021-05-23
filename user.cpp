@@ -32,3 +32,25 @@ bool User::login(const QString& username, const QString& password) {
 
     return success;
 }
+
+bool User::signUp(const QString& username, const QString& email, const QString& password, const int& roleId) {
+    bool success = false;
+
+    QSqlQuery query;
+    query.prepare("INSERT INTO User (username, email, password, role_id) VALUES (:username, :email, :password, :role_id)");
+    query.bindValue(":username", username);
+    query.bindValue(":email", email);
+    query.bindValue(":password", password);
+    query.bindValue(":role_id", roleId);
+
+    if(query.exec()) {
+        success = true;
+    }
+    else {
+        success = false;
+    }
+
+
+    return success;
+}
+

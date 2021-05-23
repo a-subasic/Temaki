@@ -8,6 +8,7 @@
     </qresource>
     <qresource prefix="/pages">
         <file>Login.qml</file>
+        <file>Register.qml</file>
     </qresource>
     <qresource prefix="/pages/components"/>
     <qresource prefix="/layouts">
