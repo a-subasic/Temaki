@@ -26,3 +26,7 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 HEADERS += \
     user.h
 
+DISTFILES += \
+    Header.qml \
+    Home.qml
+

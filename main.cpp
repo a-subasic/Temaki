@@ -35,6 +35,7 @@ int main(int argc, char *argv[])
     qInfo() << path;
     QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE");
     db.setDatabaseName(path);
+
     if(!db.open()) {
       qWarning() << "Database not connected.";
     }

@@ -5,8 +5,9 @@ import QtQuick.Controls 2.15
 import "qrc:/pages" as Pages
 
 Window {
-    width: 640
-    height: 480
+    id: mainWindow
+    width: 900
+    height: 680
     visible: true
     title: qsTr("Temaki")
 
@@ -30,4 +31,10 @@ Window {
         height: 200
         anchors.centerIn: parent
     }
+    /*
+    Loader {
+        source:"Home.qml";
+        width: parent.width;
+        height: parent.height;
+    }*/
 }

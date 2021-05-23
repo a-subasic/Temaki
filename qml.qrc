@@ -1,6 +1,7 @@
 <RCC>
     <qresource prefix="/">
         <file>main.qml</file>
+        <file>Home.qml</file>
     </qresource>
     <qresource prefix="/images">
         <file>temaki.png</file>
@@ -9,4 +10,8 @@
         <file>Login.qml</file>
     </qresource>
     <qresource prefix="/pages/components"/>
+    <qresource prefix="/layouts">
+        <file>Sidebar.qml</file>
+        <file>Header.qml</file>
+    </qresource>
 </RCC>
