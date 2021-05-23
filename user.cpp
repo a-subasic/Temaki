@@ -54,3 +54,13 @@ bool User::signUp(const QString& username, const QString& email, const QString& 
     return success;
 }
 
+QList<User> User::search(const QString& entry) {
+    QList<User> result;
+
+    QSqlQuery query;
+    query.prepare("SELECT username, email, password, role_id FROM User WHERE username LIKE %:entry% OR email LIKE %:entry%");
+    query.bindValue(":entry", entry);
+
+    // TODO
+}
+
