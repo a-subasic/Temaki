@@ -1,6 +1,9 @@
 import QtQuick 2.0
 import QtQuick.Controls 2.15
 
+
+import "qrc:/const.js" as Constants
+
 Page {
     id: registerPage
     width: mainWindow.width
@@ -65,13 +68,13 @@ Page {
 
             Label {
                 id: label4
-                text: qsTr("Role Id")
+                text: qsTr("Role")
             }
 
-            TextField {
-                id: txtRoleId
+            ComboBox {
+                id: role
                 width: parent.width
-                placeholderText: qsTr("")
+                model: Constants.ROLES
             }
 
             Button {
@@ -80,7 +83,7 @@ Page {
                 anchors.horizontalCenter: parent.horizontalCenter
                 text: qsTr("Submit")
                 onClicked: {
-                    var success = user.signUp(txtUsername.text, txtEmail.text, txtPassword.text, 1)
+                    var success = user.signUp(txtUsername.text, txtEmail.text, txtPassword.text, role.currentIndex + 1)
                     console.log(success);
                     if(success) {
                         if (stackView.depth > 1) {

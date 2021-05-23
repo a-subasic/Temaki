@@ -1,0 +1,1 @@
+const ROLES = ["Editor", "Viewer"]
