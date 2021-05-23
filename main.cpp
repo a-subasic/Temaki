@@ -4,6 +4,10 @@
 #include <QtSql>
 #include <QSqlDatabase>
 #include <QDebug>
+#include <QQmlContext>
+#include <QFileInfo>
+
+#include "user.h"
 
 int main(int argc, char *argv[])
 {
@@ -24,13 +28,21 @@ int main(int argc, char *argv[])
 
     app.setWindowIcon(QIcon(":/images/temaki.png"));
 
-    QString path = qApp->applicationDirPath() + "/TaskManager.db";
+    // Database connection
+    // Adjust projectFolder name if necessary
+    QString projectFolder = "/Temaki";
+    QString path = QFileInfo(".").absolutePath() + projectFolder + "/TaskManager.db";
+    qInfo() << path;
     QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE");
-    db.setHostName("127.0.0.1");
     db.setDatabaseName(path);
     if(!db.open()) {
       qWarning() << "Database not connected.";
-    };
+    }
+
+    // Class declarations
+    User user;
+
+    engine.rootContext()->setContextProperty("user", &user);
 
     return app.exec();
 }
