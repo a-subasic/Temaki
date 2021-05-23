@@ -16,6 +16,7 @@ signals:
 
 public slots:
     bool login(const QString& username, const QString& password);
+    bool signUp(const QString& username, const QString& email, const QString& password, const int& roleId);
 
 };
 

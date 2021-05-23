@@ -32,7 +32,6 @@ int main(int argc, char *argv[])
     // Adjust projectFolder name if necessary
     QString projectFolder = "/Temaki";
     QString path = QFileInfo(".").absolutePath() + projectFolder + "/TaskManager.db";
-    qInfo() << path;
     QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE");
     db.setDatabaseName(path);
 

@@ -11,30 +11,17 @@ Window {
     visible: true
     title: qsTr("Temaki")
 
-    Popup {
-        id: popup
-        anchors.centerIn: parent
-        modal: true
-        focus: true
-        closePolicy: Popup.CloseOnEscape | Popup.CloseOnPressOutside
-
-        Label {
-            id: lblStatus
-            anchors.centerIn: parent
-            text: ""
-        }
-    }
-
-    Pages.Login {
-        id: login
-        width: 250
-        height: 200
-        anchors.centerIn: parent
-    }
     /*
     Loader {
         source:"Home.qml";
         width: parent.width;
         height: parent.height;
     }*/
+
+    StackView {
+        id: stackView
+        initialItem: Qt.resolvedUrl("pages/Login.qml")
+        anchors.fill: parent
+        visible: true
+    }
 }
