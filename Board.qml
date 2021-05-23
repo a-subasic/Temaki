@@ -3,6 +3,8 @@ import QtQuick.Controls 2.14
 
 Page {
     title: "Board"
+    width: parent.width
+    height: parent.height
     Label {
         anchors.centerIn: parent
         text: "board"

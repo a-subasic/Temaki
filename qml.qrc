@@ -20,4 +20,7 @@
         <file>Sidebar.qml</file>
         <file>Header.qml</file>
     </qresource>
+    <qresource prefix="/createProject">
+        <file>CreateProject.qml</file>
+    </qresource>
 </RCC>

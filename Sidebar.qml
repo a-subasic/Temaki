@@ -18,8 +18,8 @@ Drawer {
                 text: qsTr("Create new project")
                 width: parent.width
                 onClicked: {
-                    bodyStackView.push("qrc:/pages/AddNewProductPage.qml")
-                    drawer.close()
+                    createProjectDialog.open()
+                    sidebarDrawer.close()
                 }
             }
             ComboBox { // https://stackoverflow.com/questions/50745414/alignment-of-text-in-qt-combobox
@@ -61,6 +61,24 @@ Drawer {
                     sidebarDrawer.close()
                 }
             }
+        }
+    }
+    Row {
+        height: 30
+        anchors.bottom: parent.bottom
+        anchors.bottomMargin: 10
+        anchors.horizontalCenter: sidebarDrawer.horizontalCenter
+        width: parent.width
+
+        Button {
+            text: "Import"
+            anchors.left: parent.left
+            width: parent.width/2
+        }
+        Button {
+            text: "Export"
+            anchors.right: parent.right
+            width: parent.width/2
         }
     }
 }
