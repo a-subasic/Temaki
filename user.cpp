@@ -9,7 +9,8 @@ User::User(QObject *parent) : QObject(parent)
 
 QVariant User::login(const QString& username, const QString& password) {
     bool success = false;
-    int id = 0;
+    int user_id = 0;
+    int role_id = 0;
 
     QSqlQuery query;
     query.prepare(QString("SELECT * FROM User WHERE username = :username AND password = :password"));
@@ -17,13 +18,15 @@ QVariant User::login(const QString& username, const QString& password) {
     query.bindValue(":password", password);
 
     if(!query.exec()) {
+        success = false;
         qWarning() << "Failed to execute login query";
     }
     else {
         while(query.next()) {
-            id = query.value(0).toInt();
+            user_id = query.value(0).toInt();
             QString usernameFromDB = query.value(1).toString();
             QString passwordFromDB = query.value(3).toString();
+            role_id = query.value(4).toInt();
 
             if(usernameFromDB == username && passwordFromDB == password) {
                 success = true;
@@ -36,13 +39,16 @@ QVariant User::login(const QString& username, const QString& password) {
 
     QVariantMap response;
     response.insert("success", success);
-    response.insert("id", id);
+    response.insert("user_id", user_id);
+    response.insert("role_id", role_id);
 
     return QVariant::fromValue(response);
 }
 
-bool User::signUp(const QString& username, const QString& email, const QString& password, const int& roleId) {
+QVariant User::signUp(const QString& username, const QString& email, const QString& password, const int& roleId) {
     bool success = false;
+    int user_id = 0;
+    int role_id = 0;
 
     QSqlQuery query;
     query.prepare("INSERT INTO User (username, email, password, role_id) VALUES (:username, :email, :password, :role_id)");
@@ -51,13 +57,24 @@ bool User::signUp(const QString& username, const QString& email, const QString& 
     query.bindValue(":password", password);
     query.bindValue(":role_id", roleId);
 
-    if(query.exec()) {
-        success = true;
+    if(!query.exec()) {
+        success = false;
+        qWarning() << "Failed to execute register query";
     }
     else {
-        success = false;
+        success = true;
+        while(query.next()) {
+            user_id = query.value(0).toInt();
+            role_id = query.value(4).toInt();
+        }
     }
-    return success;
+
+    QVariantMap response;
+    response.insert("success", success);
+    response.insert("user_id", user_id);
+    response.insert("role_id", role_id);
+
+    return QVariant::fromValue(response);
 }
 
 QList<QVariant> User::search(const QString& entry) {
