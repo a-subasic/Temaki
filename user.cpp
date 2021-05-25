@@ -1,4 +1,6 @@
 #include "user.h"
+#include <QSqlRecord>
+#include <QMetaEnum>
 
 User::User(QObject *parent) : QObject(parent)
 {
@@ -55,18 +57,35 @@ bool User::signUp(const QString& username, const QString& email, const QString& 
     else {
         success = false;
     }
-
-
     return success;
 }
 
-QList<User> User::search(const QString& entry) {
-    QList<User> result;
+QList<QVariant> User::search(const QString& entry) {
+    qWarning() << entry;
+    QList<QVariant> result;
 
     QSqlQuery query;
-    query.prepare("SELECT username, email, password, role_id FROM User WHERE username LIKE %:entry% OR email LIKE %:entry%");
-    query.bindValue(":entry", entry);
+    query.prepare("SELECT id, username, email, role_id FROM User WHERE username LIKE :entry OR email LIKE :entry");
+    query.bindValue(":entry", QString("%%1%").arg(entry));
+    query.exec();
 
-    // TODO
+    while (query.next()){
+        QString id = query.value(0).toString();
+        QString username = query.value(1).toString();
+        QString email = query.value(2).toString();
+        QString roleid = query.value(4).toString();
+
+        UserRole roleEnum = static_cast<UserRole>(roleid.toInt());
+        QString role = QMetaEnum::fromType<UserRole>().valueToKey(roleEnum);
+
+        QVariantMap map;
+        map.insert("id", id);
+        map.insert("username", username);
+        map.insert("email", email);
+        map.insert("roleid", role);
+
+        result.append(QVariant::fromValue(map));
+    }
+    return result;
 }
 
