@@ -5,8 +5,9 @@ User::User(QObject *parent) : QObject(parent)
 
 }
 
-bool User::login(const QString& username, const QString& password) {
+QVariant User::login(const QString& username, const QString& password) {
     bool success = false;
+    int id = 0;
 
     QSqlQuery query;
     query.prepare(QString("SELECT * FROM User WHERE username = :username AND password = :password"));
@@ -18,6 +19,7 @@ bool User::login(const QString& username, const QString& password) {
     }
     else {
         while(query.next()) {
+            id = query.value(0).toInt();
             QString usernameFromDB = query.value(1).toString();
             QString passwordFromDB = query.value(3).toString();
 
@@ -30,7 +32,11 @@ bool User::login(const QString& username, const QString& password) {
         }
     }
 
-    return success;
+    QVariantMap response;
+    response.insert("success", success);
+    response.insert("id", id);
+
+    return QVariant::fromValue(response);
 }
 
 bool User::signUp(const QString& username, const QString& email, const QString& password, const int& roleId) {

@@ -41,8 +41,12 @@ Page {
                         failedDialog.open()
                     }
                     else {
-                        var success = user.login(username.input.text, password.input.text)
-                        if(success) {
+                        var response = user.login(username.input.text, password.input.text)
+
+                        if(response.success) {
+                            user.id = response.id
+                            user.username = username.input.text
+
                             if (stackView.depth > 1) {
                                 stackView.pop()
                             } else {

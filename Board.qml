@@ -7,6 +7,6 @@ Page {
     height: parent.height
     Label {
         anchors.centerIn: parent
-        text: "board"
+        text: user.username + user.id
     }
 }
