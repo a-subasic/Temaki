@@ -1,8 +1,8 @@
 import QtQuick 2.0
 import QtQuick.Controls 2.15
 
-
 import "qrc:/const.js" as Constants
+import "qrc:/components"
 
 Page {
     id: registerPage
@@ -12,62 +12,42 @@ Page {
     Item {
         anchors.centerIn: parent
         width: 250
-        height: 450
-
+        height: 475
 
         Column {
             id: column
             anchors.fill: parent
-            spacing: 10
+            spacing: 5
 
-            Label {
-                id: label
-                text: qsTr("Username")
+            Input {
+                id: username
+                labelName: "Username"
+                errorText: "Username is required"
             }
 
-            TextField {
-                id: txtUsername
-                width: parent.width
-                placeholderText: qsTr("")
+            Input {
+                id: email
+                labelName: "E-mail"
+                validatorRegex: "[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,4}"
+                errorText: "E-mail is in invalid format"
             }
 
-            Label {
-                id: label2
-                text: qsTr("E-mail")
+            Input {
+                id: password
+                labelName: "Password"
+                errorText: "Password is required"
+                echo: TextInput.Password
             }
 
-            TextField {
-                id: txtEmail
-                width: parent.width
-                placeholderText: qsTr("")
-            }
-
-            Label {
-                id: label1
-                text: qsTr("Password")
-            }
-
-            TextField {
-                id: txtPassword
-                width: parent.width
-                placeholderText: qsTr("")
-                echoMode: TextInput.Password
+            Input {
+                id: confirmPassword
+                labelName: "Confirm Password"
+                errorText: "Confirm Password is required"
+                customErrorText: confirmPassword.input.text === password.input.text ? "" : "Passwords don't match"
+                echo: TextInput.Password
             }
 
             Label {
-                id: label3
-                text: qsTr("Confirm Password")
-            }
-
-            TextField {
-                id: txtConfirmPassword
-                width: parent.width
-                placeholderText: qsTr("")
-                echoMode: TextInput.Password
-            }
-
-            Label {
-                id: label4
                 text: qsTr("Role")
             }
 
@@ -83,13 +63,20 @@ Page {
                 anchors.horizontalCenter: parent.horizontalCenter
                 text: qsTr("Submit")
                 onClicked: {
-                    var success = user.signUp(txtUsername.text, txtEmail.text, txtPassword.text, role.currentIndex + 1)
-                    console.log(success);
-                    if(success) {
-                        if (stackView.depth > 1) {
-                            stackView.pop()
-                        } else {
-                            stackView.push("qrc:/Home.qml")
+                    if(!username.isValid || !email.isValid || !password.isValid || !confirmPassword.isValid) {
+                        failedDialog.open()
+                    }
+                    else {
+                        var success = user.signUp(username.input.text, email.input.text, password.input.text, role.currentIndex + 1)
+                        if(success) {
+                            if (stackView.depth > 1) {
+                                stackView.pop()
+                            } else {
+                                stackView.push("qrc:/Home.qml")
+                            }
+                        }
+                        else {
+                             failedDialog.open()
                         }
                     }
                 }
@@ -120,4 +107,9 @@ Page {
         }
     }
 
+    InfoDialog {
+        id: failedDialog
+        dialogTitle: "Registration Failed"
+        description: "Please provide valid values."
+    }
 }

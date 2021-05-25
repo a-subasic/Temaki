@@ -1,6 +1,8 @@
 import QtQuick 2.0
 import QtQuick.Controls 2.15
 
+import "qrc:/components"
+
 Page {
     id: loginPage
     width: mainWindow.width
@@ -16,41 +18,39 @@ Page {
             anchors.fill: parent
             spacing: 10
 
-            Label {
-                id: label
-                text: qsTr("Username")
+            Input {
+                id: username
+                labelName: "Username"
+                errorText: "Username is required"
             }
 
-            TextField {
-                id: txtUsername
-                width: parent.width
-                placeholderText: qsTr("")
+            Input {
+                id: password
+                labelName: "Password"
+                errorText: "Password is required"
+                echo: TextInput.Password
             }
 
-            Label {
-                id: label1
-                text: qsTr("Password")
-            }
-
-            TextField {
-                id: txtPassword
-                width: parent.width
-                placeholderText: qsTr("")
-                echoMode: TextInput.Password
-            }
 
             Button {
                 id: button
                 width: parent.width
-                anchors.horizontalCenter: parent.horizontalCenter
                 text: qsTr("Submit")
                 onClicked: {
-                    var success = user.login(txtUsername.text, txtPassword.text)
-                    if(success) {
-                        if (stackView.depth > 1) {
-                            stackView.pop()
-                        } else {
-                            stackView.push("qrc:/Home.qml")
+                    if(!username.isValid || !password.isValid) {
+                        failedDialog.open()
+                    }
+                    else {
+                        var success = user.login(username.input.text, password.input.text)
+                        if(success) {
+                            if (stackView.depth > 1) {
+                                stackView.pop()
+                            } else {
+                                stackView.push("qrc:/Home.qml")
+                            }
+                        }
+                        else {
+                            failedDialog.open()
                         }
                     }
                 }
@@ -79,5 +79,11 @@ Page {
                 }
             }
         }
+    }
+
+    InfoDialog {
+        id: failedDialog
+        dialogTitle: "Login Failed"
+        description: "Please provide valid values."
     }
 }
