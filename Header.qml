@@ -30,20 +30,26 @@ Row {
         }
 
         Label {
-            text: "todo: Project name"
+            text: project.name.length > 0 ? project.name : "No Project Selected"
             anchors.centerIn: parent
         }
 
         ToolButton {
             anchors.right: logoutButton.left
             id: usernameLabel
-            text: "TODO:username"
+            text: user.username
         }
         ToolButton {
             anchors.right: parent.right
             id: logoutButton
             text: "LOGOUT"
-            onClicked: todo.open()
+            onClicked: {
+                if (stackView.depth > 1) {
+                    stackView.pop()
+                } else {
+                    stackView.push("qrc:/Login.qml")
+                }
+            }
         }
     }
 }

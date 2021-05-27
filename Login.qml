@@ -44,14 +44,19 @@ Page {
                         var response = user.login(username.input.text, password.input.text)
 
                         if(response.success) {
-                            user.id = response.id
+                            user.id = response.user_id
                             user.username = username.input.text
+                            user.role_id = response.role_id
+
+                            username.input.clear()
+                            password.input.clear()
+                            username.isActive = false
+                            password.isActive = false
 
                             if (stackView.depth > 1) {
                                 stackView.pop()
-                            } else {
-                                stackView.push("qrc:/Home.qml")
                             }
+                            stackView.push("qrc:/Home.qml")
                         }
                         else {
                             failedDialog.open()

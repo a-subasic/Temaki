@@ -9,4 +9,8 @@ Page {
         anchors.centerIn: parent
         text: user.username + user.id
     }
+    Button {
+        text: "ckucj ne"
+        onClicked: project.getAllForUser(user.id)
+    }
 }

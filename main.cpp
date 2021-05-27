@@ -8,6 +8,7 @@
 #include <QFileInfo>
 
 #include "user.h"
+#include "project.h"
 
 int main(int argc, char *argv[])
 {
@@ -41,8 +42,10 @@ int main(int argc, char *argv[])
 
     // Class declarations
     User user;
+    Project project;
 
     engine.rootContext()->setContextProperty("user", &user);
+    engine.rootContext()->setContextProperty("project", &project);
 
     return app.exec();
 }

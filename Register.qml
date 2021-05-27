@@ -67,13 +67,26 @@ Page {
                         failedDialog.open()
                     }
                     else {
-                        var success = user.signUp(username.input.text, email.input.text, password.input.text, role.currentIndex + 1)
-                        if(success) {
+                        var response = user.signUp(username.input.text, email.input.text, password.input.text, role.currentIndex + 1)
+                        if(response.success) {
+                            user.id = response.user_id
+                            user.username = username.input.text
+                            user.role_id = response.role_id
+
+                            username.input.clear()
+                            email.input.clear()
+                            password.input.clear()
+                            confirmPassword.input.clear()
+                            username.isActive = false
+                            email.isActive = false
+                            password.isActive = false
+                            confirmPassword.isActive = false
+                            role.currentIndex = 0
+
                             if (stackView.depth > 1) {
                                 stackView.pop()
-                            } else {
-                                stackView.push("qrc:/Home.qml")
                             }
+                            stackView.push("qrc:/Home.qml")
                         }
                         else {
                              failedDialog.open()
