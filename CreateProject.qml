@@ -18,17 +18,31 @@ Dialog {
         anchors.fill: parent
 
         Item {
+            id: projectForm
+            property var selectedUserIds: [] = []
+            property var projectName: string
+            function removeUnselectedUsersFromList(){
+                /* Remove all unselected elements in list */
+                for (var j=0; j<listModel.count; j++)
+                {
+                    if (projectForm.selectedUserIds.includes(listModel.get(j).id) === false){
+                        listModel.remove(j);
+                        j=0; //read from the start! Because index has changed after removing
+                    }
+                }
+            }
+
             anchors.centerIn: parent
             width: parent.width - 20
             height: parent.height - 20
 
-            /* Form: project name and search input */
+            /* Form: project name and search user input */
             Column {
                 id: column
                 anchors.left: parent.left
                 anchors.top: parent.top
                 width: parent.width * 0.6
-                height: parent.height * 0.6
+                height: parent.height * 0.55
                 spacing: 10
 
                 Label {
@@ -51,38 +65,43 @@ Dialog {
                     width: parent.width
 
                     TextField {
-                        id: membersTxt
+                        id: memberSeachInput
                         width: parent.width
                         placeholderText: qsTr("todo: search users in db")
                     }
-
                     Button {
                         Layout.alignment: Qt.AlignRight
                         id: searchMembersButton
                         text: "Search"
                         onClicked: {
-                            /* Remove all elements in list */
-                            listModel.clear();
+                            /* if input is empty, dont search and remove all unselected users from list if exists */
+                            if (memberSeachInput.text == "") {
+                                if (listModel.count > 0) {
+                                    projectForm.removeUnselectedUsersFromList();
+                                }
+                                return
+                            }
 
-                            /* Find users with username or email like input */
-                            var results = user.search(membersTxt.text)
+                            projectForm.removeUnselectedUsersFromList(); // Remove all unselected elements in list
+                            var results = user.search(memberSeachInput.text) // Find users with username or email like input
 
                             /* Append results to list */
                             for(var i in results) {
-                                var objectToAppend = {"id": results[i].id,"username": results[i].username, "email": results[i].email, "roleid": results[i].roleid};
+                                if (projectForm.selectedUserIds.includes(results[i].id)) continue // dont add if user already selected
 
-                                listModel.append(objectToAppend)
-                                membersTxt.text = ""
+                                var objectToAppend = {"id": results[i].id,"username": results[i].username, "email": results[i].email, "roleid": results[i].roleid, "added": false};
+                                listModel.append(objectToAppend) 
                             }
+                            memberSeachInput.text = "" // reset input field
                         }
                     }
                 }
             }
 
-            /* Listview component with search results - in progress */
+            /* Members search result and add/remove member form */
             Rectangle {
                 width: parent.width
-                height: parent.height * 0.4
+                height: parent.height * 0.5
                 anchors.top: column.bottom
                 border.color: "gray"
 
@@ -93,15 +112,15 @@ Dialog {
 
                     ListModel {
                         id: listModel
-                        /*ListElement {
-                            username: "test username"
-                            email: "test email"
-                        }*/
                     }
 
-                    Component {
-                        id: listHeaderComponent
-                        RowLayout {
+                    ListView {
+                        id: listView
+                        anchors.fill: parent
+                        width: parent.width
+                        height: parent.height
+                        model: listModel
+                        header: RowLayout {
                             width: listView.width
                             height: 25
                             Label {
@@ -121,45 +140,6 @@ Dialog {
                                 text: "Action"
                             }
                         }
-                    }
-
-                    Component {
-                        id: listDelegate
-                        RowLayout {
-                            width: listView.width
-                            height: 25
-                            Label {
-                                Layout.preferredWidth: parent.width * 0.25
-                                text: model.id
-                                visible: false
-                            }
-                            Label {
-                                Layout.preferredWidth: parent.width * 0.25
-                                text: model.username
-                            }
-                            Label {
-                                Layout.preferredWidth: parent.width * 0.25
-                                text: model.email
-                            }
-                            Label {
-                                Layout.preferredWidth: parent.width * 0.25
-                                text: model.roleid
-                            }
-                            Button {
-                                Layout.fillHeight: true
-                                text: "Add"
-                            }
-                        }
-
-                    }
-
-                    ListView {
-                        id: listView
-                        anchors.fill: parent
-                        width: parent.width
-                        height: parent.height
-                        model: listModel
-                        header: listHeaderComponent
                         delegate: listDelegate
                         clip: true
 
@@ -170,6 +150,45 @@ Dialog {
                     }
                 }
             }
+
+            /* Member Listview item */
+            Component {
+                id: listDelegate
+                RowLayout {
+                    width: listView.width
+                    height: 25
+                    Label {
+                        Layout.preferredWidth: parent.width * 0.25
+                        text: model.username
+                    }
+                    Label {
+                        Layout.preferredWidth: parent.width * 0.25
+                        text: model.email
+                    }
+                    Label {
+                        Layout.preferredWidth: parent.width * 0.25
+                        text: model.roleid
+                    }
+                    Button {
+                        Layout.fillHeight: true
+                        text: { model.added ? "Remove" : "Add" }
+                        onClicked: {
+                            if (model.added) {
+                                /* Remove */
+                                model.added = false // mark user as not added
+                                var remove = projectForm.selectedUserIds.indexOf(model.id); // find selected user index
+                                projectForm.selectedUserIds.splice(remove, 1); // remove selected user from selectedUserIds
+                            } else {
+                                /* Add */
+                                model.added = true; // mark user as added
+                                projectForm.selectedUserIds.push(model.id) // add selected user to selectedUserIds
+                            }
+                        }
+                    }
+                }
+
+            }
+
         }
     }
 }
