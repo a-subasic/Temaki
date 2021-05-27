@@ -30,7 +30,7 @@ Row {
         }
 
         Label {
-            text: "todo: Project name"
+            text: project.name.length > 0 ? project.name : "No Project Selected"
             anchors.centerIn: parent
         }
 

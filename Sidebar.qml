@@ -8,6 +8,17 @@ Drawer {
     width: 0.2 * mainWindow.width
     height: mainWindow.height
 
+    ListModel {
+        id: projectsModel
+    }
+
+    Component.onCompleted: {
+        var p = project.getAllForUser(user.id);
+        for(var i in p) {
+            projectsModel.append({"id": p[i].id, "name": p[i].name})
+        }
+    }
+
     StackView {
         id: sidebarStackView
         anchors.fill: parent
@@ -22,11 +33,18 @@ Drawer {
                     sidebarDrawer.close()
                 }
             }
+
             ComboBox { // https://stackoverflow.com/questions/50745414/alignment-of-text-in-qt-combobox
                 id: projectsCombobox
                 width: sidebarStackView.width
                 displayText: "Select Project"
-                model: [ "TODO1", "TODO2", "TODO3" ]
+                textRole: "name"
+                model: projectsModel
+                onCurrentTextChanged: {
+                    projectsCombobox.displayText = projectsCombobox.currentText
+                    project.id = projectsModel.get(currentIndex).id
+                    project.name = projectsModel.get(currentIndex).name
+                }
             }
 
             ItemDelegate {
