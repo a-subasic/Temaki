@@ -3,26 +3,62 @@ import QtQuick.Controls 2.13
 import QtQuick.Layouts 1.13
 import QtQuick.Controls.Material 2.1
 
+import "qrc:/components"
+
 Dialog {
     id: createProjectDialog
     title: qsTr('Create Project')
     width: 550
     height: 450
-    standardButtons: Dialog.Cancel | Dialog.Ok
+    standardButtons: Dialog.Discard | Dialog.Save
     anchors.centerIn: parent
 
-    onAccepted: console.log("Ok clicked")
-    onRejected: console.log("Cancel clicked")
+    onAccepted: {
+
+        /* Validate Project name */
+        if (projectNameTxt.input.text.length == 0) {
+            failedDialog.description = "Project name is required!";
+            createProjectDialog.open()
+            failedDialog.open()
+            return
+        }
+
+        /* Validate selected project members */
+        if (projectForm.selectedUserIds.length == 0) {
+            failedDialog.description = "Select at least one project member!";
+            createProjectDialog.open()
+            failedDialog.open()
+            return
+        }
+
+        /* Create Project */
+        var success = project.create(projectNameTxt.input.text, projectForm.selectedUserIds, user.id);
+
+        /* If Creation failed, show message */
+        if(!success) {
+            failedDialog.description = "Project creation failed.";
+            createProjectDialog.open()
+            failedDialog.open()
+            return
+        }
+    }
+
+    onDiscarded: {
+        projectForm.resetForm();
+        createProjectDialog.close();
+        console.log("Discard clicked!");
+    }
 
     Page {
         anchors.fill: parent
 
         Item {
             id: projectForm
+
             property var selectedUserIds: [] = []
-            property var projectName: string
+
+            /* Remove all unselected elements in list */
             function removeUnselectedUsersFromList(){
-                /* Remove all unselected elements in list */
                 for (var j=0; j<listModel.count; j++)
                 {
                     if (projectForm.selectedUserIds.includes(listModel.get(j).id) === false){
@@ -32,32 +68,33 @@ Dialog {
                 }
             }
 
+            /* Reset and cleanup form */
+            function resetForm(){
+                projectNameTxt.input.text = "";
+                projectForm.selectedUserIds = [];
+                listModel.clear();
+            }
+
             anchors.centerIn: parent
             width: parent.width - 20
             height: parent.height - 20
 
             /* Form: project name and search user input */
             Column {
-                id: column
+                id: createProjectForm
                 anchors.left: parent.left
                 anchors.top: parent.top
                 width: parent.width * 0.6
                 height: parent.height * 0.55
                 spacing: 10
 
-                Label {
-                    id: projectNameLabel
-                    text: qsTr("Project name")
-                }
-
-                TextField {
+                Input {
                     id: projectNameTxt
-                    width: parent.width
-                    placeholderText: qsTr("")
+                    labelName: "Project name"
+                    errorText: "Project name is required"
                 }
 
                 Label {
-                    id: membersLabel
                     text: qsTr("Members")
                 }
 
@@ -67,11 +104,12 @@ Dialog {
                     TextField {
                         id: memberSeachInput
                         width: parent.width
-                        placeholderText: qsTr("todo: search users in db")
+                        placeholderText: qsTr("Search users")
                     }
+
                     Button {
-                        Layout.alignment: Qt.AlignRight
                         id: searchMembersButton
+                        Layout.alignment: Qt.AlignRight
                         text: "Search"
                         onClicked: {
                             /* if input is empty, dont search and remove all unselected users from list if exists */
@@ -102,7 +140,7 @@ Dialog {
             Rectangle {
                 width: parent.width
                 height: parent.height * 0.5
-                anchors.top: column.bottom
+                anchors.top: createProjectForm.bottom
                 border.color: "gray"
 
                 Rectangle {
@@ -190,5 +228,11 @@ Dialog {
             }
 
         }
+    }
+
+    InfoDialog {
+        id: failedDialog
+        dialogTitle: "Create Project Failed"
+        description: ""
     }
 }
