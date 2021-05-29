@@ -22,11 +22,9 @@ QList<QVariant> Project::getAllForUser(int userId) {
     query.bindValue(":userId", userId);
     query.exec();
 
-    while (query.next()){
+    while (query.next()) {
         int id = query.value(0).toInt();
         QString name = query.value(1).toString();
-        qInfo() << id;
-        qInfo() << name;
 
         QVariantMap map;
         map.insert("id", id);

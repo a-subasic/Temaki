@@ -26,5 +26,6 @@
     <qresource prefix="/components">
         <file>Input.qml</file>
         <file>InfoDialog.qml</file>
+        <file>Multiselect.qml</file>
     </qresource>
 </RCC>

@@ -30,14 +30,14 @@ Row {
         }
 
         Label {
-            text: project.name.length > 0 ? project.name : "No Project Selected"
+            text: project ? project.name : "No Project Selected"
             anchors.centerIn: parent
         }
 
         ToolButton {
             anchors.right: logoutButton.left
             id: usernameLabel
-            text: user.username
+            text: user ? user.username : "Anonymous"
         }
         ToolButton {
             anchors.right: parent.right

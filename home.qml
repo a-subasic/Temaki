@@ -6,7 +6,7 @@ import "qrc:/layouts" as Layouts
 import "qrc:/pages" as Pages
 import "qrc:/createProject" as CreateProject
 
-Grid {
+Page {
     id: homeScreen
     visible: true
     width: parent.width;

@@ -7,7 +7,7 @@ StackView {
     Layout.fillWidth: true
     anchors.top: header.bottom
     width: parent.width
-    height: parent.width
+    height: parent.height - header.height
 
     // animations: https://stackoverflow.com/questions/22784691/qml-stackview-custom-transition
     pushEnter: Transition {
