@@ -4,6 +4,7 @@ import QtQuick.Layouts 1.13
 import QtQuick.Controls.Material 2.1
 
 import "qrc:/components"
+import "qrc:/layouts"
 
 Dialog {
     id: createProjectDialog
@@ -40,6 +41,9 @@ Dialog {
             createProjectDialog.open()
             failedDialog.open()
             return
+        } else {
+            projectForm.resetForm()
+            sidebar.reloadProjects()
         }
     }
 

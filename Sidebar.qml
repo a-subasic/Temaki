@@ -12,11 +12,16 @@ Drawer {
         id: projectsModel
     }
 
-    Component.onCompleted: {
+    function reloadProjects(){
         var p = project.getAllForUser(user.id);
+        projectsModel.clear()
         for(var i in p) {
             projectsModel.append({"id": p[i].id, "name": p[i].name})
         }
+    }
+
+    Component.onCompleted: {
+        reloadProjects()
     }
 
     StackView {
