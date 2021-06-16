@@ -1,6 +1,8 @@
 import QtQuick 2.0
 import QtQuick.Controls 2.14
 import QtQuick.Layouts 1.3
+import MyQMLEnums 13.37
+import QtQml.Models 2.1
 
 import "qrc:/const.js" as Constants
 import "qrc:/components"
@@ -11,11 +13,26 @@ Page {
     width: parent.width
     height: parent.height
 
+    ListModel {
+        id: tasksModel
+    }
+
     Connections {
         target: project
 
         function onIdChanged(id) {
-            task.getForProjectByStatus(id, 1)
+            var t = task.getForProjectByStatus(id, 1)
+            for(var i in t) {
+                tasksModel.append({
+                    "id": t[i].id,
+                    "owner_id": t[i].owner_id,
+                    "estimated_time": t[i].estimated_time,
+                    "spent_time": t[i].spent_time,
+                    "status_id": t[i].status_id,
+                    "title": t[i].title,
+                })
+            }
+
             noProjectLoader.active = false
             boardLoader.active = true
         }
@@ -94,17 +111,16 @@ Page {
                     anchors.fill: parent
                     spacing: 10
 
-                    width: item2.width
-                    height: item2.height
-
                     Column {
                         Rectangle {
+                            id: tasksContainer
                             width: item2.width/4 - 10 + row.spacing/4
                             height: item2.height
                             color: "lightgrey"
                             border.color: "grey"
 
                             Rectangle {
+                                id: status1
                                 width: parent.width
                                 border.color: "black"
                                 border.width: 2
@@ -117,8 +133,43 @@ Page {
                                     text: Constants.Status.BACKLOG
                                 }
                             }
+
+                            ScrollView {
+                                width: parent.width
+                                height: parent.height - status1.height
+                                anchors.top: status1.bottom
+                                clip: true
+                                ScrollBar.horizontal.policy: ScrollBar.AlwaysOff
+                                ScrollBar.vertical.interactive: true
+
+                                ListView {
+                                    width: parent.width
+                                    height: parent.height
+                                    focus: true
+                                    orientation: Qt.Vertical
+
+                                    model: tasksModel
+                                    delegate: Item {
+                                        width: tasksContainer.width
+                                        height: status_id == Status.BACKLOG ? 105 : 0
+                                        visible: status_id == Status.BACKLOG
+
+                                        Rectangle {
+                                            width: parent.width
+                                            height: 100
+                                            color: "green"
+
+                                            Label {
+                                                anchors.centerIn: parent
+                                                text: title
+                                            }
+                                        }
+                                    }
+                                }
+                            }
                         }
                     }
+
                     Column {
                         Rectangle {
                             width: item2.width/4 - 10 + row.spacing/4
@@ -127,6 +178,7 @@ Page {
                             border.color: "grey"
 
                             Rectangle {
+                                id: status2
                                 width: parent.width
                                 border.color: "black"
                                 border.width: 2
@@ -139,6 +191,40 @@ Page {
                                     text: Constants.Status.ACTIVE
                                 }
                             }
+
+                            ScrollView {
+                                width: parent.width
+                                height: parent.height - status2.height
+                                anchors.top: status2.bottom
+                                clip: true
+                                ScrollBar.horizontal.policy: ScrollBar.AlwaysOff
+                                ScrollBar.vertical.interactive: true
+
+                                ListView {
+                                    width: parent.width
+                                    height: parent.height
+                                    focus: true
+                                    orientation: Qt.Vertical
+
+                                    model: tasksModel
+                                    delegate: Item {
+                                        width: tasksContainer.width
+                                        height: status_id == Status.ACTIVE ? 105 : 0
+                                        visible: status_id == Status.ACTIVE
+
+                                        Rectangle {
+                                            width: parent.width
+                                            height: 100
+                                            color: "green"
+
+                                            Label {
+                                                anchors.centerIn: parent
+                                                text: title
+                                            }
+                                        }
+                                    }
+                                }
+                            }
                         }
                     }
                     Column {
@@ -149,6 +235,7 @@ Page {
                             border.color: "grey"
 
                             Rectangle {
+                                id: status3
                                 width: parent.width
                                 border.color: "black"
                                 border.width: 2
@@ -161,6 +248,40 @@ Page {
                                     text: Constants.Status.IN_REVIEW
                                 }
                             }
+
+                            ScrollView {
+                                width: parent.width
+                                height: parent.height - status3.height
+                                anchors.top: status3.bottom
+                                clip: true
+                                ScrollBar.horizontal.policy: ScrollBar.AlwaysOff
+                                ScrollBar.vertical.interactive: true
+
+                                ListView {
+                                    width: parent.width
+                                    height: parent.height
+                                    focus: true
+                                    orientation: Qt.Vertical
+
+                                    model: tasksModel
+                                    delegate: Item {
+                                        width: tasksContainer.width
+                                        height: status_id == Status.IN_REVIEW ? 105 : 0
+                                        visible: status_id == Status.IN_REVIEW
+
+                                        Rectangle {
+                                            width: parent.width
+                                            height: 100
+                                            color: "green"
+
+                                            Label {
+                                                anchors.centerIn: parent
+                                                text: title
+                                            }
+                                        }
+                                    }
+                                }
+                            }
                         }
                     }
                     Column {
@@ -171,6 +292,7 @@ Page {
                             border.color: "grey"
 
                             Rectangle {
+                                id: status4
                                 width: parent.width
                                 border.color: "black"
                                 border.width: 2
@@ -183,153 +305,45 @@ Page {
                                     text: Constants.Status.CLOSED
                                 }
                             }
+
+                            ScrollView {
+                                width: parent.width
+                                height: parent.height - status4.height
+                                anchors.top: status4.bottom
+                                clip: true
+                                ScrollBar.horizontal.policy: ScrollBar.AlwaysOff
+                                ScrollBar.vertical.interactive: true
+
+                                ListView {
+                                    width: parent.width
+                                    height: parent.height
+                                    focus: true
+                                    orientation: Qt.Vertical
+
+                                    model: tasksModel
+                                    delegate: Item {
+                                        width: tasksContainer.width
+                                        height: status_id == Status.CLOSED ? 105 : 0
+                                        visible: status_id == Status.CLOSED
+
+                                        Rectangle {
+                                            width: parent.width
+                                            height: 100
+                                            color: "green"
+
+                                            Label {
+                                                anchors.centerIn: parent
+                                                text: title
+                                            }
+                                        }
+                                    }
+                                }
+                            }
                         }
                     }
-
                 }
             }
         }
     }
-
-//    ColumnLayout {
-//        anchors.fill: parent
-
-//        anchors.margins: 5
-//        spacing: 5
-
-//        Item {
-//            id: actions
-//            height: 40
-//            Layout.fillWidth: true
-
-//            Row {
-//                spacing: 5
-
-//                Multiselect {
-//                 title: "Members"
-//                }
-
-//                Multiselect {
-//                 title: "Priority"
-//                }
-
-//                Multiselect {
-//                 title: "Type"
-//                }
-//            }
-
-//            Button {
-//                anchors.right: parent.right
-//                Layout.alignment: Qt.AlignRight
-//                id: buttonAbout
-//                text: "Create task"
-//            }
-//        }
-
-//        Item {
-//            id: item2
-//            Layout.fillWidth: true
-//            Layout.fillHeight: true
-
-//            RowLayout {
-//                id: row
-//                anchors.fill: parent
-//                spacing: 10
-
-//                width: item2.width
-//                height: item2.height
-
-//                Column {
-//                    Rectangle {
-//                        width: item2.width/4 - 10 + row.spacing/4
-//                        height: item2.height
-//                        color: "lightgrey"
-//                        border.color: "grey"
-
-//                        Rectangle {
-//                            width: parent.width
-//                            border.color: "black"
-//                            border.width: 2
-//                            color: "white"
-//                            height: 40
-
-//                            Label {
-//                                anchors.horizontalCenter: parent.horizontalCenter
-//                                anchors.verticalCenter: parent.verticalCenter
-//                                text: Constants.Status.BACKLOG
-//                            }
-//                        }
-//                    }
-//                }
-//                Column {
-//                    Rectangle {
-//                        width: item2.width/4 - 10 + row.spacing/4
-//                        height: item2.height
-//                        color: "lightgrey"
-//                        border.color: "grey"
-
-//                        Rectangle {
-//                            width: parent.width
-//                            border.color: "black"
-//                            border.width: 2
-//                            color: "white"
-//                            height: 40
-
-//                            Label {
-//                                anchors.horizontalCenter: parent.horizontalCenter
-//                                anchors.verticalCenter: parent.verticalCenter
-//                                text: Constants.Status.ACTIVE
-//                            }
-//                        }
-//                    }
-//                }
-//                Column {
-//                    Rectangle {
-//                        width: item2.width/4 - 10 + row.spacing/4
-//                        height: item2.height
-//                        color: "lightgrey"
-//                        border.color: "grey"
-
-//                        Rectangle {
-//                            width: parent.width
-//                            border.color: "black"
-//                            border.width: 2
-//                            color: "white"
-//                            height: 40
-
-//                            Label {
-//                                anchors.horizontalCenter: parent.horizontalCenter
-//                                anchors.verticalCenter: parent.verticalCenter
-//                                text: Constants.Status.IN_REVIEW
-//                            }
-//                        }
-//                    }
-//                }
-//                Column {
-//                    Rectangle {
-//                        width: item2.width/4 - 10 + row.spacing/4
-//                        height: item2.height
-//                        color: "lightgrey"
-//                        border.color: "grey"
-
-//                        Rectangle {
-//                            width: parent.width
-//                            border.color: "black"
-//                            border.width: 2
-//                            color: "white"
-//                            height: 40
-
-//                            Label {
-//                                anchors.horizontalCenter: parent.horizontalCenter
-//                                anchors.verticalCenter: parent.verticalCenter
-//                                text: Constants.Status.CLOSED
-//                            }
-//                        }
-//                    }
-//                }
-
-//            }
-//        }
-//    }
 }
 

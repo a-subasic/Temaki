@@ -8,6 +8,7 @@
 #include <QFileInfo>
 
 #include "user.h"
+#include "status.h"
 #include "project.h"
 #include "task.h"
 
@@ -49,6 +50,8 @@ int main(int argc, char *argv[])
     engine.rootContext()->setContextProperty("user", &user);
     engine.rootContext()->setContextProperty("project", &project);
     engine.rootContext()->setContextProperty("task", &task);
+
+    Status::declareQML();
 
     return app.exec();
 }

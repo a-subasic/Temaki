@@ -27,6 +27,7 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 
 HEADERS += \
     project.h \
+    status.h \
     task.h \
     user.h
 
