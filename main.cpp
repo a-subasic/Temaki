@@ -9,6 +9,7 @@
 
 #include "user.h"
 #include "project.h"
+#include "task.h"
 
 int main(int argc, char *argv[])
 {
@@ -43,9 +44,11 @@ int main(int argc, char *argv[])
     // Class declarations
     User user;
     Project project;
+    Task task;
 
     engine.rootContext()->setContextProperty("user", &user);
     engine.rootContext()->setContextProperty("project", &project);
+    engine.rootContext()->setContextProperty("task", &task);
 
     return app.exec();
 }

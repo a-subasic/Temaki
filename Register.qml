@@ -70,8 +70,9 @@ Page {
                         var response = user.signUp(username.input.text, email.input.text, password.input.text, role.currentIndex + 1)
                         if(response.success) {
                             user.id = response.user_id
+                            console.log(user.id);
                             user.username = username.input.text
-                            user.role_id = response.role_id
+                            user.role_id = role.currentIndex + 1
 
                             username.input.clear()
                             email.input.clear()

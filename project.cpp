@@ -15,8 +15,6 @@ Project::Project(QObject *parent) : QObject(parent)
 QList<QVariant> Project::getAllForUser(int userId) {
     QList<QVariant> result;
 
-    qInfo() << userId;
-
     QSqlQuery query;
     query.prepare("SELECT id, name FROM Project WHERE id IN (SELECT project_id FROM ProjectMembers WHERE user_id = :userId)");
     query.bindValue(":userId", userId);

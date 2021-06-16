@@ -90,12 +90,10 @@ Drawer {
 
         Button {
             text: "Import"
-//            anchors.left: parent.left
             width: parent.width/2
         }
         Button {
             text: "Export"
-//            anchors.right: parent.right
             width: parent.width/2
         }
     }

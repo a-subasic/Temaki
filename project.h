@@ -16,7 +16,7 @@ public:
     void setId(const int id) {
         if (id != m_id) {
             m_id = id;
-            emit idChanged();
+            emit idChanged(id);
         }
     }
     int id() const {
@@ -34,7 +34,7 @@ public:
     }
 
 signals:
-    void idChanged();
+    void idChanged(int id);
     void nameChanged();
 
 private:

@@ -9,6 +9,7 @@ CONFIG += c++11
 SOURCES += \
         main.cpp \
         project.cpp \
+        task.cpp \
         user.cpp
 
 RESOURCES += qml.qrc
@@ -26,6 +27,7 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 
 HEADERS += \
     project.h \
+    task.h \
     user.h
 
 DISTFILES +=

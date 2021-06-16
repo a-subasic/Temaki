@@ -48,7 +48,6 @@ QVariant User::login(const QString& username, const QString& password) {
 QVariant User::signUp(const QString& username, const QString& email, const QString& password, const int& roleId) {
     bool success = false;
     int user_id = 0;
-    int role_id = 0;
 
     QSqlQuery query;
     query.prepare("INSERT INTO User (username, email, password, role_id) VALUES (:username, :email, :password, :role_id)");
@@ -63,16 +62,12 @@ QVariant User::signUp(const QString& username, const QString& email, const QStri
     }
     else {
         success = true;
-        while(query.next()) {
-            user_id = query.value(0).toInt();
-            role_id = query.value(4).toInt();
-        }
+        user_id = query.lastInsertId().toInt();
     }
 
     QVariantMap response;
     response.insert("success", success);
     response.insert("user_id", user_id);
-    response.insert("role_id", role_id);
 
     return QVariant::fromValue(response);
 }
@@ -86,7 +81,7 @@ QList<QVariant> User::search(const QString& entry) {
     query.bindValue(":entry", QString("%%1%").arg(entry));
     query.exec();
 
-    while (query.next()){
+    while (query.next()) {
         QString id = query.value(0).toString();
         QString username = query.value(1).toString();
         QString email = query.value(2).toString();
@@ -104,5 +99,26 @@ QList<QVariant> User::search(const QString& entry) {
         result.append(QVariant::fromValue(map));
     }
     return result;
+}
+
+bool User::create() {
+
+    QSqlQuery query;
+    query.prepare("INSERT INTO User (username, email, password, role_id) VALUES ('testt', 'testt@gmail.com', 'test', 1)");
+
+    if(!query.exec()) {
+        qWarning() << "Failed to execute login query";
+    }
+    else {
+        qWarning() << "fdfdfd";
+
+        while(query.next()) {
+            qInfo() << "aaa";
+            qWarning() << "fdfdfd";
+            qInfo() << query.value(0).toInt();
+        }
+    }
+
+    return true;
 }
 
