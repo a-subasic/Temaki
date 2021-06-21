@@ -4,7 +4,7 @@ import QtQuick.Controls 2.14
 
 import "qrc:/layouts" as Layouts
 import "qrc:/pages" as Pages
-import "qrc:/editors" as Editors
+
 
 Page {
     id: homeScreen
@@ -27,9 +27,6 @@ Page {
         id: bodyStackView
     }
 
-    /* Create Project */
-    Editors.CreateProject{
-        id: createProjectComp
-    }
+
 
 }

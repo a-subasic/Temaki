@@ -29,6 +29,7 @@ Drawer {
     StackView {
         id: sidebarStackView
         anchors.fill: parent
+        width: parent.width
 
         Column {
             anchors.fill: parent
@@ -40,6 +41,11 @@ Drawer {
                     d.open()
                     sidebarDrawer.close()
                 }
+            }
+
+            /* Create Project Component Dialog */
+            Editors.CreateProject{
+                id: createProjectComp
             }
 
             ComboBox { // https://stackoverflow.com/questions/50745414/alignment-of-text-in-qt-combobox

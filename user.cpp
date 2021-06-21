@@ -124,10 +124,9 @@ bool User::create() {
 
 QList<QVariant> User::getProjectMembers(int projectId) {
     QList<QVariant> result;
-    qInfo() << projectId;
 
     QSqlQuery query;
-    query.prepare("SELECT id, username, email, role_id FROM User WHERE userId IN (SELECT user_id FROM ProjectMembers WHERE project_id = :projectId)");
+    query.prepare("SELECT id, username, email, role_id FROM User WHERE id IN (SELECT user_id FROM ProjectMembers WHERE project_id = :projectId)");
     query.bindValue(":projectId", projectId);
     query.exec();
 
@@ -144,7 +143,7 @@ QList<QVariant> User::getProjectMembers(int projectId) {
         map.insert("id", id);
         map.insert("username", username);
         map.insert("email", email);
-        map.insert("roleid", role);
+        map.insert("role_id", role);
 
         result.append(QVariant::fromValue(map));
     }

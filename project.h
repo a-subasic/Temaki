@@ -38,7 +38,7 @@ signals:
     void nameChanged();
 
 private:
-    int m_id;
+    int m_id = -1; // set to -1 as default (TODO: find a better way to do this)
     QString m_name;
 
 public slots:

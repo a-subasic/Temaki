@@ -6,6 +6,9 @@
     </qresource>
     <qresource prefix="/images">
         <file>temaki.png</file>
+        <file>clear.png</file>
+        <file>lineedit-bg.png</file>
+        <file>lineedit-bg-focus.png</file>
     </qresource>
     <qresource prefix="/pages">
         <file>Login.qml</file>
@@ -28,5 +31,6 @@
         <file>Input.qml</file>
         <file>InfoDialog.qml</file>
         <file>Multiselect.qml</file>
+        <file>SearchBox.qml</file>
     </qresource>
 </RCC>

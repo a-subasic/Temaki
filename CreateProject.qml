@@ -59,7 +59,7 @@ Component {
         Page {
             id: projectForm
             width: parent.width
-            height: parent.height
+            height: parent.height - 60
 
             Input {
                 id: projectNameTxt
@@ -77,7 +77,7 @@ Component {
 
         InfoDialog {
             id: failedDialog
-            dialogTitle: "Create Project Failed"
+            dialogTitle: "Create Project"
             description: ""
         }
     }

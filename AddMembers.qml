@@ -79,15 +79,16 @@ Item {
     /* Members search result and add/remove member form */
     Rectangle {
         width: parent.width
-        height: parent.height * 0.5
         anchors.top: addMembersColumn.bottom
+        anchors.bottom: parent.bottom
         anchors.topMargin: 10
-        border.color: "gray"
+        border.color: "lightgrey"
 
         Rectangle {
             anchors.centerIn: parent
-            width: parent.width - 10
-            height: parent.height - 10
+            width: parent.width
+            height: parent.height
+            border.color: "lightgrey"
 
             ListModel {
                 id: listModel
@@ -99,28 +100,34 @@ Item {
                 width: parent.width
                 height: parent.height
                 model: listModel
-                header: RowLayout {
+                header: Rectangle {
                     width: listView.width
-                    height: 25
-                    Label {
-                        horizontalAlignment: "AlignLeft"
-                        Layout.preferredWidth: parent.width * 0.25
-                        text: "Username"
-                    }
-                    Label {
-                        horizontalAlignment: "AlignLeft"
-                        Layout.preferredWidth: parent.width * 0.25
-                        text: "Email"
-                    }
-                    Label {
-                        horizontalAlignment: "AlignLeft"
-                        Layout.preferredWidth: parent.width * 0.25
-                        text: "Role"
-                    }
-                    Label {
-                        horizontalAlignment: "AlignLeft"
-                        Layout.preferredWidth: parent.width * 0.25
-                        text: "Action"
+                    height: 30
+                    color: "lightgrey"
+                    RowLayout {
+                        width: parent.width - 10
+                        height: parent.height - 10
+                        anchors.centerIn: parent
+                        Label {
+                            Layout.alignment: Qt.AlignLeft
+                            Layout.preferredWidth: parent.width * 0.25
+                            text: "Username"
+                        }
+                        Label {
+                            Layout.alignment: Qt.AlignLeft
+                            Layout.preferredWidth: parent.width * 0.25
+                            text: "Email"
+                        }
+                        Label {
+                            Layout.alignment: Qt.AlignLeft
+                            Layout.preferredWidth: parent.width * 0.25
+                            text: "Role"
+                        }
+                        Label {
+                            Layout.alignment: Qt.AlignLeft
+                            Layout.preferredWidth: parent.width * 0.25
+                            text: "Action"
+                        }
                     }
                 }
                 delegate: listDelegate
@@ -137,40 +144,55 @@ Item {
     /* Member Listview item */
     Component {
         id: listDelegate
-        RowLayout {
-            width: listView.width
-            height: 25
-            Label {
-                Layout.preferredWidth: parent.width * 0.25
-                text: model.username
-            }
-            Label {
-                Layout.preferredWidth: parent.width * 0.25
-                text: model.email
-            }
-            Label {
-                Layout.preferredWidth: parent.width * 0.25
-                text: model.roleid
-            }
-            Button {
-                Layout.fillHeight: true
 
-                text: { model.added ? "Remove" : "Add" }
-                onClicked: {
-                    if (model.added) {
-                        /* Remove */
-                        model.added = false // mark user as not added
-                        var remove = addMembersForm.selectedUserIds.indexOf(model.id); // find selected user index
-                        addMembersForm.selectedUserIds.splice(remove, 1); // remove selected user from selectedUserIds
-                    } else {
-                        /* Add */
-                        model.added = true; // mark user as added
-                        addMembersForm.selectedUserIds.push(model.id) // add selected user to selectedUserIds
+        Rectangle {
+            width: listView.width
+            height: 30
+            border.color: "lightgrey"
+
+            RowLayout {
+                width: parent.width - 10
+                height: parent.height - 10
+                anchors.centerIn: parent
+
+                Label {
+                    Layout.alignment: Qt.AlignLeft
+                    Layout.preferredWidth: parent.width * 0.25
+                    text: model.username
+                }
+                Label {
+                    Layout.alignment: Qt.AlignLeft
+                    Layout.preferredWidth: parent.width * 0.25
+                    text: model.email
+                }
+                Label {
+                    Layout.alignment: Qt.AlignLeft
+                    Layout.preferredWidth: parent.width * 0.25
+                    text: model.roleid
+                }
+                Item {
+                    width: parent.width * 0.25
+                    Layout.fillHeight: true
+                    Button {
+                        Layout.alignment: Qt.AlignCenter
+                        height: parent.height
+                        text: { model.added ? "Remove" : "Add" }
+                        onClicked: {
+                            if (model.added) {
+                                /* Remove */
+                                model.added = false // mark user as not added
+                                var remove = addMembersForm.selectedUserIds.indexOf(model.id); // find selected user index
+                                addMembersForm.selectedUserIds.splice(remove, 1); // remove selected user from selectedUserIds
+                            } else {
+                                /* Add */
+                                model.added = true; // mark user as added
+                                addMembersForm.selectedUserIds.push(model.id) // add selected user to selectedUserIds
+                            }
+                        }
                     }
                 }
             }
         }
-
     }
 
 }
