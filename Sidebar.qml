@@ -1,8 +1,9 @@
-import QtQuick 2.0
+import QtQuick 2.3
 import QtQuick.Controls 2.15
 import QtQuick.Layouts 1.3
-import "qrc:/pages/" as Pages
 import QtQml.Models 2.1
+import "qrc:/editors" as Editors
+import "qrc:/pages/" as Pages
 
 Drawer {
     id: sidebarDrawer
@@ -13,11 +14,16 @@ Drawer {
         id: projectsModel
     }
 
-    Component.onCompleted: {
+    function reloadProjects(){
         var p = project.getAllForUser(user.id);
+        projectsModel.clear()
         for(var i in p) {
             projectsModel.append({"id": p[i].id, "name": p[i].name})
         }
+    }
+
+    Component.onCompleted: {
+        reloadProjects()
     }
 
     StackView {
@@ -30,7 +36,8 @@ Drawer {
                 text: qsTr("Create new project")
                 width: parent.width
                 onClicked: {
-                    createProjectDialog.open()
+                    var d = createProjectComp.createObject(homeScreen, {"parent" : homeScreen});
+                    d.open()
                     sidebarDrawer.close()
                 }
             }

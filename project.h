@@ -42,8 +42,8 @@ private:
     QString m_name;
 
 public slots:
-//    bool create(const QString& name, const QList<int>& memberIds);
     QList<QVariant> getAllForUser(int userId);
+    QVariant create(const QString& name, const QList<int>& memberIds, const int& currentUserId);
 };
 
 #endif // PROJECT_H

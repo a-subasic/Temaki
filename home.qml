@@ -4,7 +4,7 @@ import QtQuick.Controls 2.14
 
 import "qrc:/layouts" as Layouts
 import "qrc:/pages" as Pages
-import "qrc:/createProject" as CreateProject
+import "qrc:/editors" as Editors
 
 Page {
     id: homeScreen
@@ -18,7 +18,7 @@ Page {
     }
 
     /* Sidebar */
-    Layouts.Sidebar{
+    Layouts.Sidebar {
         id: sidebar
     }
 
@@ -28,7 +28,8 @@ Page {
     }
 
     /* Create Project */
-    CreateProject.CreateProject{
-        id: createProjectDialog
+    Editors.CreateProject{
+        id: createProjectComp
     }
+
 }

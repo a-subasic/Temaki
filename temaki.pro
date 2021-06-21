@@ -31,5 +31,6 @@ HEADERS += \
     task.h \
     user.h
 
-DISTFILES +=
+DISTFILES += \
+    Members.qml
 

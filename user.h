@@ -65,6 +65,7 @@ public slots:
     QVariant signUp(const QString& username, const QString& email, const QString& password, const int& roleId);
     QList<QVariant> search(const QString& entry); /* search users by username/email and return User list */
     bool create();
+    QList<QVariant> getProjectMembers(int projectId); /* get all users (project members) from project_id */
 };
 
 #endif // USER_H

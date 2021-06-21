@@ -122,3 +122,31 @@ bool User::create() {
     return true;
 }
 
+QList<QVariant> User::getProjectMembers(int projectId) {
+    QList<QVariant> result;
+    qInfo() << projectId;
+
+    QSqlQuery query;
+    query.prepare("SELECT id, username, email, role_id FROM User WHERE userId IN (SELECT user_id FROM ProjectMembers WHERE project_id = :projectId)");
+    query.bindValue(":projectId", projectId);
+    query.exec();
+
+    while (query.next()){
+        QString id = query.value(0).toString();
+        QString username = query.value(1).toString();
+        QString email = query.value(2).toString();
+        QString roleid = query.value(4).toString();
+
+        UserRole roleEnum = static_cast<UserRole>(roleid.toInt());
+        QString role = QMetaEnum::fromType<UserRole>().valueToKey(roleEnum);
+
+        QVariantMap map;
+        map.insert("id", id);
+        map.insert("username", username);
+        map.insert("email", email);
+        map.insert("roleid", role);
+
+        result.append(QVariant::fromValue(map));
+    }
+    return result;
+}
