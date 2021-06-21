@@ -4,9 +4,8 @@ import QtQuick.Controls 2.14
 
 import "qrc:/layouts" as Layouts
 import "qrc:/pages" as Pages
-import "qrc:/components"
 
-Page {
+Grid {
     id: homeScreen
     visible: true
     width: parent.width;
@@ -18,7 +17,7 @@ Page {
     }
 
     /* Sidebar */
-    Layouts.Sidebar {
+    Layouts.Sidebar{
         id: sidebar
     }
 
@@ -26,4 +25,5 @@ Page {
     Layouts.Body{
         id: bodyStackView
     }
+
 }
