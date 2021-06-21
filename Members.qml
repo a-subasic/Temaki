@@ -246,6 +246,7 @@ Page {
 
     Component {
         id: addMembersComp
+
         Dialog {
             id: addMembersDialog
             title: "Add Members"
@@ -256,6 +257,7 @@ Page {
 
             Editors.AddMembers {
                 id: addMembersForm
+                ignoreUserIds: membersPage.memberList.map(function(obj) {return obj.id;})
                 anchors.top: addMembersDialog.top
                 width: parent.width
                 height: parent.height - 20
@@ -271,7 +273,7 @@ Page {
                 }
 
                 /* Add Members to project */
-                //var success = project.create(projectNameTxt.input.text, addMembersForm.selectedUserIds, user.id);
+                var success = user.addProjectMembers(project.id, addMembersForm.selectedUserIds);
 
                 /* If Creation failed, show message */
                 if(!success) {
@@ -280,7 +282,7 @@ Page {
                     failedDialog.open()
                     return
                 } else {
-                    sidebar.reloadProjects()
+                    membersPage.getProjectMembers(project.id)
                 }
             }
 

@@ -8,7 +8,7 @@ import QtQuick.Dialogs 1.2
 ----------------------------------------------------------------------------------------------------------------
     Usage:
         - Use when user confirmation is required
-        - set dialogTitle, description
+        - set dialogTitle, dialogDescription
         - define actions rejected/accepted
 ----------------------------------------------------------------------------------------------------------------
     Example:
@@ -16,7 +16,7 @@ import QtQuick.Dialogs 1.2
 
         ...
         onClicked: {
-            var confirmDialog = confirmationComp.createObject(membersPage, {"dialogDescription" : "some text"});
+            var confirmDialog = confirmationComp.createObject(someWindow, {"dialogDescription" : "some text"});
 
             confirmDialog.accepted.connect(function(){
                 console.log("accepted")

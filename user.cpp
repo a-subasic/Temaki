@@ -72,13 +72,15 @@ QVariant User::signUp(const QString& username, const QString& email, const QStri
     return QVariant::fromValue(response);
 }
 
-QList<QVariant> User::search(const QString& entry) {
+QList<QVariant> User::search(const QString& entry, const QStringList& ignoreUserIds) { /* Note: ignoreUserIds is optional */
     qWarning() << entry;
     QList<QVariant> result;
-
+    QString ignoreUserIdsString = QString("(%1)").arg(ignoreUserIds.join(","));
     QSqlQuery query;
-    query.prepare("SELECT id, username, email, role_id FROM User WHERE username LIKE :entry OR email LIKE :entry");
+
+    query.prepare(QString("SELECT id, username, email, role_id FROM User WHERE (username LIKE :entry OR email LIKE :entry) AND (id NOT IN %1)").arg(ignoreUserIdsString));
     query.bindValue(":entry", QString("%%1%").arg(entry));
+    //query.bindValue(":ignoreUserIdsString", ignoreUserIdsString); // for some reason, this didnt work (parameter count mismatch)
     query.exec();
 
     while (query.next()) {
@@ -152,13 +154,34 @@ QList<QVariant> User::getProjectMembers(int projectId) {
 
 /* TODO: discuss: what happens if we delete all project members? */
 bool User::removeProjectMember(int projectId, int userId) {
-    QList<QVariant> result;
-
     QSqlQuery query;
     query.prepare("DELETE FROM ProjectMembers WHERE project_id = :projectId AND user_id = :userId");
     query.bindValue(":projectId", projectId);
     query.bindValue(":userId", userId);
     bool success = query.exec();
 
+    return success;
+}
+
+bool User::addProjectMembers(int projectId, const QStringList& memberIds){
+    bool success = false;
+
+    // Prepare for transaction
+    QSqlDatabase::database().transaction();
+
+    foreach(const QString& memberId, memberIds){
+        QSqlQuery query;
+        query.prepare("INSERT INTO ProjectMembers (project_id, user_id) VALUES (:project_id, :user_id)");
+        query.bindValue(":project_id", projectId);
+        query.bindValue(":user_id", memberId);
+        success = query.exec();
+
+        if(!success) {
+            qWarning() << QString("Rollback transaction!");
+            QSqlDatabase::database().rollback(); // rollback if failed to insert ProjectMember
+            return success;
+        }
+    }
+    QSqlDatabase::database().commit();
     return success;
 }

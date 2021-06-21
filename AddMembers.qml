@@ -9,6 +9,7 @@ import "qrc:/layouts"
 Item {
     id: addMembersForm
     property var selectedUserIds: [] = []
+    property var ignoreUserIds: [] = [] // userIds to ignore when searching for users
 
     /* Remove all unselected elements in list */
     function removeUnselectedUsersFromList(){
@@ -61,7 +62,7 @@ Item {
                     }
 
                     addMembersForm.removeUnselectedUsersFromList(); // Remove all unselected elements in list
-                    var results = user.search(memberSeachInput.text) // Find users with username or email like input
+                    var results = user.search(memberSeachInput.text, addMembersForm.ignoreUserIds) // Find users with username or email like input
 
                     /* Append results to list */
                     for(var i in results) {

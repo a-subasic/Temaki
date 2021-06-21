@@ -44,7 +44,7 @@ QVariant Project::create(const QString& name, const QList<int>& memberIds, const
         }
     }
 
-    QSqlDatabase::database().commit();
+    if (success) QSqlDatabase::database().commit();
     QVariantMap response;
     response.insert("success", success);
     response.insert("project_id", project_id);
