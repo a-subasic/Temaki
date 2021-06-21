@@ -2,6 +2,7 @@ import QtQuick 2.0
 import QtQuick.Controls 2.15
 
 /*
+  SearchBox
 ----------------------------------------------------------------------------------------------------------
     Usage:
         - this component can be used for search inputs; in order to keep consistent style

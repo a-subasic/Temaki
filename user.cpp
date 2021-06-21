@@ -149,3 +149,16 @@ QList<QVariant> User::getProjectMembers(int projectId) {
     }
     return result;
 }
+
+/* TODO: discuss: what happens if we delete all project members? */
+bool User::removeProjectMember(int projectId, int userId) {
+    QList<QVariant> result;
+
+    QSqlQuery query;
+    query.prepare("DELETE FROM ProjectMembers WHERE project_id = :projectId AND user_id = :userId");
+    query.bindValue(":projectId", projectId);
+    query.bindValue(":userId", userId);
+    bool success = query.exec();
+
+    return success;
+}

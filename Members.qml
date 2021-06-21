@@ -18,12 +18,13 @@ Page {
         if(project.id !== -1) getProjectMembers(project.id)
     }
 
-    function filterProjectMembers(text) {
-        // Get all project members
-        getProjectMembers(project.id)
+    property var memberList
 
+    /* reset membersModel to membersList and filter values */
+    function filterProjectMembers(text) {
+        setProjectMembersModel()
         // Remove all project members not containing filter text
-        for (var j=0; j< membersModel.count; j++)
+        for (var j=0; j < membersModel.count; j++)
         {
             if (membersModel.get(j).username.includes(text) === false &&
                 membersModel.get(j).email.includes(text) === false &&
@@ -35,20 +36,26 @@ Page {
         }
     }
 
-    function getProjectMembers(id) {
-        membersModel.clear()
-        var members = user.getProjectMembers(id)
-        for(var i in members) {
-            membersModel.append({
-                "id": members[i].id,
-                "username": members[i].username,
-                "email": members[i].email,
-                "role_id": members[i].role_id,
-            })
-        }
+    /* get memberList and set values of membersModel */
+    function getProjectMembers(projectId) {
+        memberList = user.getProjectMembers(projectId) // get member list
+        setProjectMembersModel()
 
         noProjectLoader.active = false
         membersLoader.active = true
+    }
+
+    /* clear membersModel (listView) and set values to membersList */
+    function setProjectMembersModel() {
+        membersModel.clear() // clear current membersModel
+        for(var i in memberList) { // set membersModel values
+            membersModel.append({
+                "id": memberList[i].id,
+                "username": memberList[i].username,
+                "email": memberList[i].email,
+                "role_id": memberList[i].role_id,
+            })
+        }
     }
 
     Connections {
@@ -216,9 +223,23 @@ Page {
                         height: parent.height
                         text: "Remove"
                         onClicked: {
+                            var description = "Are you sure you want to remove member '" + model.username + "' from the project?"
+                            var confirmDialog = confirmationComp.createObject(membersPage, {"dialogDescription" : description});
+
+                            confirmDialog.accepted.connect(function(){
+                                user.removeProjectMember(project.id, model.id)
+                                membersPage.getProjectMembers(project.id)
+                            })
+
+                            confirmDialog.rejected.connect(function(){
+                                console.log("rejected")
+                            })
+
+                            confirmDialog.visible = true
                         }
                     }
                 }
+
             }
         }
     }
@@ -275,5 +296,9 @@ Page {
         id: failedDialog
         dialogTitle: "Add Members"
         description: ""
+    }
+
+    ConfirmationDialog {
+        id: confirmationComp
     }
 }

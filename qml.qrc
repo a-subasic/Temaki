@@ -32,5 +32,6 @@
         <file>InfoDialog.qml</file>
         <file>Multiselect.qml</file>
         <file>SearchBox.qml</file>
+        <file>ConfirmationDialog.qml</file>
     </qresource>
 </RCC>

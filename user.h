@@ -66,6 +66,7 @@ public slots:
     QList<QVariant> search(const QString& entry); /* search users by username/email and return User list */
     bool create();
     QList<QVariant> getProjectMembers(int projectId); /* get all users (project members) from project_id */
+    bool removeProjectMember(int projectId, int userId);
 };
 
 #endif // USER_H
