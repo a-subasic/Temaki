@@ -28,5 +28,6 @@ HEADERS += \
     project.h \
     user.h
 
-DISTFILES +=
+DISTFILES += \
+    Members.qml
 

@@ -11,17 +11,18 @@
         <file>Login.qml</file>
         <file>Register.qml</file>
         <file>Board.qml</file>
-        <file>Members.qml</file>
         <file>Analytics.qml</file>
         <file>Labels.qml</file>
+        <file>Members.qml</file>
     </qresource>
     <qresource prefix="/layouts">
         <file>Body.qml</file>
         <file>Sidebar.qml</file>
         <file>Header.qml</file>
     </qresource>
-    <qresource prefix="/createProject">
+    <qresource prefix="/editors">
         <file>CreateProject.qml</file>
+        <file>AddMembers.qml</file>
     </qresource>
     <qresource prefix="/components">
         <file>Input.qml</file>

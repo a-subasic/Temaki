@@ -2,6 +2,8 @@ import QtQuick 2.3
 import QtQuick.Controls 2.15
 import QtQuick.Layouts 1.3
 import "qrc:/pages/" as Pages
+import "qrc:/editors" as Editors
+
 
 Drawer {
     id: sidebarDrawer
@@ -34,7 +36,8 @@ Drawer {
                 text: qsTr("Create new project")
                 width: parent.width
                 onClicked: {
-                    createProjectDialog.open()
+                    var d = createProjectComp.createObject(homeScreen, {"parent" : homeScreen});
+                    d.open()
                     sidebarDrawer.close()
                 }
             }
