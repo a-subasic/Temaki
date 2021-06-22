@@ -13,7 +13,7 @@ Component {
     Dialog {
         id: createTaskDialog
         visible:false
-        title: qsTr('Create Task')
+        title: qsTr('Create Task - wip')
         width: 550
         height: 450
         standardButtons: Dialog.Discard | Dialog.Save
