@@ -15,7 +15,14 @@ Page {
     height: parent.height
 
     Component.onCompleted: {
-        if(project.id !== -1) getProjectMembers(project.id)
+        if(project.id !== -1) getProjectMembers()
+    }
+
+    Connections {
+        target: project
+        function onIdChanged() {
+            getProjectMembers()
+        }
     }
 
     property var memberList
@@ -37,8 +44,8 @@ Page {
     }
 
     /* get memberList and set values of membersModel */
-    function getProjectMembers(projectId) {
-        memberList = user.getProjectMembers(projectId) // get member list
+    function getProjectMembers() {
+        memberList = user.getProjectMembers(project.id) // get member list
         setProjectMembersModel()
 
         noProjectLoader.active = false

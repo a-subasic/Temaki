@@ -28,37 +28,19 @@ Page {
         console.log("current project id", project.id)
 
         if(project.id !== -1) {
-            task.getForProjectByStatus(project.id, 1)
+            getTasks()
         }
     }
 
     Connections {
         target: project
-
         function onIdChanged() {
-            var t = task.getForProjectByStatus(project.id, 1)
-            tasksModel.clear()
-            for(var i in t) {
-                tasksModel.append({
-                    "id": t[i].id,
-                    "owner_id": t[i].owner_id,
-                    "estimated_time": t[i].estimated_time,
-                    "spent_time": t[i].spent_time,
-                    "status_id": t[i].status_id,
-                    "title": t[i].title,
-                })
-            }
-            user.getProjectMembers(project.id)
-            label.getProjectLabels(project.id)
-
-            noProjectLoader.active = false
-            boardLoader.active = true
+            getTasks()
         }
     }
 
     Connections {
         target: user
-
         function onProjectMembersChanged() {
             board.memberUsernames = user.project_members.map(function(obj) {return obj.username;})
             multiselectChange()
@@ -67,12 +49,31 @@ Page {
 
     Connections {
         target: label
-
         function onProjectLabelsChanged() {
             board.labelPriorities = [...new Set(label.project_labels.priorities.map(function(obj) {return obj.name;}))]
             board.labelTypes = [...new Set(label.project_labels.types.map(function(obj) {return obj.name;}))]
             multiselectChange()
         }
+    }
+
+    function getTasks() {
+        var t = task.getForProjectByStatus(project.id, 1)
+        tasksModel.clear()
+        for(var i in t) {
+            tasksModel.append({
+                "id": t[i].id,
+                "owner_id": t[i].owner_id,
+                "estimated_time": t[i].estimated_time,
+                "spent_time": t[i].spent_time,
+                "status_id": t[i].status_id,
+                "title": t[i].title,
+            })
+        }
+        user.getProjectMembers(project.id)
+        label.getProjectLabels(project.id)
+
+        noProjectLoader.active = false
+        boardLoader.active = true
     }
 
     Loader {
