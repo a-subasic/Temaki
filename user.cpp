@@ -149,6 +149,8 @@ QList<QVariant> User::getProjectMembers(int projectId) {
 
         result.append(QVariant::fromValue(map));
     }
+    m_project_members = result;
+    projectMembersChanged();
     return result;
 }
 

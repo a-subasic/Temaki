@@ -26,6 +26,7 @@
     <qresource prefix="/editors">
         <file>CreateProject.qml</file>
         <file>AddMembers.qml</file>
+        <file>CreateTask.qml</file>
     </qresource>
     <qresource prefix="/components">
         <file>Input.qml</file>

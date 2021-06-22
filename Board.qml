@@ -6,6 +6,7 @@ import QtQml.Models 2.1
 
 import "qrc:/const.js" as Constants
 import "qrc:/components"
+import "qrc:/editors" as Editors
 
 Page {
     title: "Board"
@@ -17,11 +18,26 @@ Page {
         id: tasksModel
     }
 
+    property var memberUsernames: [] = []
+    property var labelPriorities: [] = []
+    property var labelTypes: [] = []
+
+    signal multiselectChange;
+
+    Component.onCompleted: {
+        console.log("current project id", project.id)
+
+        if(project.id !== -1) {
+            task.getForProjectByStatus(project.id, 1)
+        }
+    }
+
     Connections {
         target: project
 
-        function onIdChanged(id) {
-            var t = task.getForProjectByStatus(id, 1)
+        function onIdChanged() {
+            var t = task.getForProjectByStatus(project.id, 1)
+            tasksModel.clear()
             for(var i in t) {
                 tasksModel.append({
                     "id": t[i].id,
@@ -32,9 +48,30 @@ Page {
                     "title": t[i].title,
                 })
             }
+            user.getProjectMembers(project.id)
+            label.getProjectLabels(project.id)
 
             noProjectLoader.active = false
             boardLoader.active = true
+        }
+    }
+
+    Connections {
+        target: user
+
+        function onProjectMembersChanged() {
+            board.memberUsernames = user.project_members.map(function(obj) {return obj.username;})
+            multiselectChange()
+        }
+    }
+
+    Connections {
+        target: label
+
+        function onProjectLabelsChanged() {
+            board.labelPriorities = [...new Set(label.project_labels.priorities.map(function(obj) {return obj.name;}))]
+            board.labelTypes = [...new Set(label.project_labels.types.map(function(obj) {return obj.name;}))]
+            multiselectChange()
         }
     }
 
@@ -77,19 +114,35 @@ Page {
                 height: 40
                 Layout.fillWidth: true
 
+                Connections {
+                    target: board
+                    onMultiselectChange: {
+                        membersMultiselect.initComboboxItems(board.memberUsernames);
+                        priorityMultiselect.initComboboxItems(board.labelPriorities);
+                        typeMultiselect.initComboboxItems(board.labelTypes);
+                    }
+                }
+
                 Row {
                     spacing: 5
 
                     Multiselect {
-                     title: "Members"
+                        id: membersMultiselect
+                        title: "Members"
+                        items: board.memberUsernames
+
                     }
 
                     Multiselect {
-                     title: "Priority"
+                        id: priorityMultiselect
+                        title: "Priority"
+                        items: board.labelPriorities
                     }
 
                     Multiselect {
-                     title: "Type"
+                        id: typeMultiselect
+                        title: "Type"
+                        items: board.labelTypes
                     }
                 }
 
@@ -98,6 +151,15 @@ Page {
                     Layout.alignment: Qt.AlignRight
                     id: buttonAbout
                     text: "Create task"
+                    onClicked: {
+                        var d = createTaskComp.createObject(homeScreen, {"parent" : homeScreen});
+                        d.open()
+                    }
+                }
+
+                /* Create Task Component Dialog */
+                Editors.CreateTask{
+                    id: createTaskComp
                 }
             }
 

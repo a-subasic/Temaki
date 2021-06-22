@@ -4,19 +4,33 @@ import QtQuick.Controls 2.15
 ComboBox {
     id: comboBox
     property string title: "Select"
+    property var items: []
 
     displayText: title
 
     model: ListModel {
+        id: cbItems
         ListElement { name: "One"; selected: false }
         ListElement { name: "Two"; selected: false }
         ListElement { name: "Three"; selected: false }
     }
 
+    /* If there are any items defined, default combobox values will be replaced */
+    Component.onCompleted: {
+        if (items.length !== 0) initComboboxItems(comboBox.items)
+    }
+
+    function initComboboxItems(items) {
+        cbItems.clear()
+        for (var i in items) {
+            cbItems.append({"name": items[i], "selected": false})
+        }
+    }
+
     // ComboBox closes the popup when its items (anything AbstractButton derivative) are
     //  activated. Wrapping the delegate into a plain Item prevents that.
     delegate: Item {
-        width: parent.width
+        width: parent ? parent.width : 0
         height: checkDelegate.height
 
         function toggle() { checkDelegate.toggle() }

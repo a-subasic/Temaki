@@ -13,6 +13,7 @@ class User : public QObject
     Q_PROPERTY(int id READ id WRITE setId NOTIFY idChanged)
     Q_PROPERTY(QString username READ username WRITE setUsername NOTIFY usernameChanged)
     Q_PROPERTY(int role_id READ role_id WRITE setRoleId NOTIFY roleIdChanged)
+    Q_PROPERTY(QList<QVariant> project_members READ project_members WRITE setProjectMembers NOTIFY projectMembersChanged)
 public:
     explicit User(QObject *parent = nullptr);
     enum UserRole {
@@ -49,16 +50,27 @@ public:
     int role_id() const {
         return m_role_id;
     }
+    QList<QVariant> project_members() const {
+        return m_project_members;
+    }
+    void setProjectMembers(const QList<QVariant> project_members) {
+        if (project_members != m_project_members) {
+            m_project_members = project_members;
+            emit projectMembersChanged();
+        }
+    }
 
 signals:
     void idChanged();
     void usernameChanged();
     void roleIdChanged();
+    void projectMembersChanged();
 
 private:
     int m_id;
     QString m_username;
     int m_role_id;
+    QList<QVariant> m_project_members;
 
 public slots:
     QVariant login(const QString& username, const QString& password);

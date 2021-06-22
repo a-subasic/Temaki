@@ -24,10 +24,10 @@ QList<QVariant> Task::getForProjectByStatus(const int& projectId, const int& sta
         int status_id = query.value(5).toInt();
         QString title = query.value(6).toString();
 
-        qInfo() << owner_id;
-        qInfo() << estimated_time;
-        qInfo() << spent_time;
-        qInfo() << status_id;
+        //qInfo() << owner_id;
+        //qInfo() << estimated_time;
+        //qInfo() << spent_time;
+        //qInfo() << status_id;
 
         QVariantMap map;
         map.insert("id", id);

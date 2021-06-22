@@ -11,6 +11,7 @@
 #include "status.h"
 #include "project.h"
 #include "task.h"
+#include "label.h"
 
 int main(int argc, char *argv[])
 {
@@ -46,10 +47,12 @@ int main(int argc, char *argv[])
     User user;
     Project project;
     Task task;
+    Label label;
 
     engine.rootContext()->setContextProperty("user", &user);
     engine.rootContext()->setContextProperty("project", &project);
     engine.rootContext()->setContextProperty("task", &task);
+    engine.rootContext()->setContextProperty("label", &label);
 
     Status::declareQML();
 
