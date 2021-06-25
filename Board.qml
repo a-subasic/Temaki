@@ -43,6 +43,13 @@ Page {
         multiselectChange()
 
         /* Tasks */
+        initTasks()
+        noProjectLoader.active = false
+        boardLoader.active = true
+    }
+
+    /* Reloads tasks into board */
+    function initTasks() {
         var t = task.project_tasks
         tasksModel.clear()
         for(var i in t) {
@@ -55,14 +62,19 @@ Page {
                 "title": t[i].title,
             })
         }
-        noProjectLoader.active = false
-        boardLoader.active = true
     }
 
     Connections {
         target: project
         function onIdChanged() {
             initBoard()
+        }
+    }
+
+    Connections {
+        target: task
+        function onProjectTasksChanged() {
+            initTasks()
         }
     }
 

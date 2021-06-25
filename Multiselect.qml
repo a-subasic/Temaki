@@ -14,6 +14,34 @@ ComboBox {
         id: cbItems
     }
 
+    /* If there are any items defined, default combobox values will be replaced */
+    Component.onCompleted: {
+        if (items.length !== 0) initComboboxItems(items)
+    }
+
+    /* clear combobox items and init with new */
+    function initComboboxItems(items) {
+        comboBox.items = items;
+        cbItems.clear()
+        for (var i in items) {
+            cbItems.append({"id": items[i].id, "name": items[i].name, "selected": false})
+        }
+    }
+
+    /* returns selected items in array */
+    function getSelectedItems() {
+        var result = [];
+        for (var j=0; j < cbItems.count; j++)
+        {
+            if (cbItems.get(j).selected === true)
+            {
+                result.push(cbItems.get(j))
+            }
+        }
+        return result;
+    }
+
+
     /* Multiselect popup height and scroll behaviour */
     popup: Popup {
         y: comboBox.height + 1
@@ -28,18 +56,6 @@ ComboBox {
             currentIndex: comboBox.highlightedIndex
 
             ScrollIndicator.vertical: ScrollIndicator { }
-        }
-    }
-
-    /* If there are any items defined, default combobox values will be replaced */
-    Component.onCompleted: {
-        if (items.length !== 0) initComboboxItems(comboBox.items)
-    }
-
-    function initComboboxItems(items) {
-        cbItems.clear()
-        for (var i in items) {
-            cbItems.append({"id": items[i].id, "name": items[i].name, "selected": false})
         }
     }
 

@@ -14,8 +14,8 @@ Component {
         id: createTaskDialog
         visible:false
         title: qsTr('Create Task - wip')
-        width: 550
-        height: 450
+        width: 400
+        height: 350
         standardButtons: Dialog.Discard | Dialog.Save
         anchors.centerIn: parent
 
@@ -52,7 +52,8 @@ Component {
             }
 
             /* Create Task */
-            //var success = project.create(projectNameTxt.input.text, addMembersForm.selectedUserIds, user.id);
+            var selectedLabelIds = labelMultiselect.getSelectedItems().map(function(obj) { if (obj.selected )return obj.id})
+            var success = task.create(taskTitleText.input.text, project.id, selectedLabelIds, estimatedTimeText.value, selectedOwnerId.text ?? null);
 
             /* If Creation failed, show message */
             if(!success) {
@@ -79,7 +80,7 @@ Component {
             Column {
                 id: column
                 anchors.fill: parent
-                spacing: 10
+                spacing: 20
                 Input {
                     id: taskTitleText
                     labelName: "Title"
@@ -91,44 +92,44 @@ Component {
                     visible: false
                 }
 
-                ComboBox {
-                    property bool isSelected: false
-                    id: membersCombobox
-                    width: taskForm.width
-                    displayText: "Assign Member"
-                    textRole: "name"
-                    model: membersModel
-                    onCurrentTextChanged: {
-                        isSelected = true
-                        membersCombobox.displayText = membersCombobox.currentText
-                        selectedOwnerId.text = membersModel.get(currentIndex).id
+                Row {
+                    width: parent.width
+                    spacing: 10
+
+                    Multiselect {
+                        id: labelMultiselect
+                        title: "Labels"
+                        width: parent.width/2 - parent.spacing/2
+                        maxHeight: 150
+                    }
+
+                    ComboBox {
+                        property bool isSelected: false
+                        id: membersCombobox
+                        displayText: "Assign Member"
+                        textRole: "name"
+                        width: parent.width/2 - parent.spacing/2
+                        model: membersModel
+                        onCurrentTextChanged: {
+                            isSelected = true
+                            membersCombobox.displayText = membersCombobox.currentText
+                            selectedOwnerId.text = membersModel.get(currentIndex).id
+                        }
                     }
                 }
 
-                Multiselect {
-                    id: labelMultiselect
-                    title: "Labels"
-                }
-
-                Item {
-                    width: parent.width
-                    height: 80
-
-                    Column {
-                        anchors.fill: parent
-
-                        Label {
-                            text: "Estimated time (hours)"
-                            height: 25
-                        }
-
-                        SpinBox {
-                            id: estimatedTimeText
-                        }
+                Column {
+                    spacing: 5
+                    Label {
+                        text: "Estimated time (hours)"
+                    }
+                    SpinBox {
+                        id: estimatedTimeText
                     }
                 }
 
             }
+
         }
 
         InfoDialog {
