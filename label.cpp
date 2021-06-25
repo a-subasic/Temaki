@@ -6,6 +6,35 @@ Label::Label(QObject *parent) : QObject(parent)
 {
 }
 
+QList<QVariant> Label::getLabels() {
+    QList<QVariant> result;
+
+    QSqlQuery query;
+    query.prepare("SELECT id, name, label_type_id, color FROM Label");
+    query.exec();
+
+    //SELECT Label.id, Label.name, LabelType.name, Label.color FROM Label INNER JOIN LabelType ON Label.label_type_id = LabelType.id WHERE Label.id IN (SELECT label_id FROM TaskLabels WHERE task_id IN (SELECT Task.id FROM Task WHERE project_id = 5))
+
+    while (query.next()){
+        QString id = query.value(0).toString();
+        QString name = query.value(1).toString();
+        QString type_id = query.value(2).toString();
+        QString color = query.value(3).toString();
+
+        LabelType labelTypeEnum = static_cast<LabelType>(type_id.toInt());
+        QString type = QMetaEnum::fromType<LabelType>().valueToKey(labelTypeEnum);
+
+        QVariantMap map;
+        map.insert("id", id);
+        map.insert("name", name);
+        map.insert("type", type);
+        map.insert("color", color);
+
+        result.append(map);
+    }
+    return result;
+}
+
 QVariant Label::getProjectLabels(int projectId) {
     QVariant result;
     QList<QVariant> priorities;

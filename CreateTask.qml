@@ -20,15 +20,22 @@ Component {
         anchors.centerIn: parent
 
         Component.onCompleted: {
-            reloadMembers()
+            initMembers()
+            initLabels()
         }
 
-        function reloadMembers(){
-            var memberList = user.getProjectMembers(project.id) // get member list
+        function initMembers(){
+            var memberList = user.project_members
             membersModel.clear()
             for(var i in memberList) {
                 membersModel.append({"id": memberList[i].id, "name": memberList[i].username})
             }
+        }
+
+        function initLabels(){
+            var labels = label.getLabels()
+            var labelItems = labels.map(function(obj) {return {"id": obj.id, "name": obj.name}})
+            labelMultiselect.initComboboxItems(labelItems)
         }
 
         ListModel {
@@ -44,15 +51,7 @@ Component {
                 return
             }
 
-            /* Validate assigned member */
-            if (!membersCombobox.isSelected) {
-                failedDialog.description = "Assign a member!";
-                createTaskDialog.open()
-                failedDialog.open()
-                return
-            }
-
-            /* Create Project */
+            /* Create Task */
             //var success = project.create(projectNameTxt.input.text, addMembersForm.selectedUserIds, user.id);
 
             /* If Creation failed, show message */
@@ -107,7 +106,8 @@ Component {
                 }
 
                 Multiselect {
-
+                    id: labelMultiselect
+                    title: "Labels"
                 }
 
                 Item {
@@ -118,7 +118,6 @@ Component {
                         anchors.fill: parent
 
                         Label {
-                            id: label
                             text: "Estimated time (hours)"
                             height: 25
                         }

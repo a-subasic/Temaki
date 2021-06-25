@@ -34,12 +34,12 @@ Page {
 
     function initBoard() {
         /* Project labels */
-        board.labelPriorities = [...new Set(label.project_labels.priorities.map(function(obj) {return obj.name;}))]
-        board.labelTypes = [...new Set(label.project_labels.types.map(function(obj) {return obj.name;}))]
+        board.labelPriorities = [...new Set(label.project_labels.priorities.map(function(obj) {return {"id": obj.id, "name": obj.name};}))]
+        board.labelTypes = [...new Set(label.project_labels.types.map(function(obj) {return {"id": obj.id, "name": obj.name};}))]
         multiselectChange()
 
         /* Project member */
-        board.memberUsernames = user.project_members.map(function(obj) {return obj.username;})
+        board.memberUsernames = user.project_members.map(function(obj) {return {"id": obj.id, "name": obj.username}})
         multiselectChange()
 
         /* Tasks */
