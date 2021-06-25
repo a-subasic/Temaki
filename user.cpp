@@ -96,7 +96,7 @@ QList<QVariant> User::search(const QString& entry, const QStringList& ignoreUser
         map.insert("id", id);
         map.insert("username", username);
         map.insert("email", email);
-        map.insert("roleid", role);
+        map.insert("role_id", role);
 
         result.append(QVariant::fromValue(map));
     }

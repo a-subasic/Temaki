@@ -22,6 +22,43 @@ Item {
         }
     }
 
+    Component.onCompleted: {
+        initMembers()
+    }
+
+    /* clear membersModel (listView) and set values to membersList */
+    function initMembers() {
+        var members = user.search("", addMembersForm.ignoreUserIds) // Find users with username or email like input
+
+        listModel.clear() // clear current membersModel
+        for(var i in members) { // set membersModel values
+            listModel.append({
+                "id": members[i].id,
+                "username": members[i].username,
+                "email": members[i].email,
+                "role_id": members[i].role_id,
+                "added":  addMembersForm.selectedUserIds.includes(members[i].id)
+            })
+        }
+    }
+
+    /* reset membersModel to membersList and filter values */
+    function filterProjectMembers(text) {
+        initMembers()
+        // Remove all project members not containing filter text
+        for (var j=0; j < listModel.count; j++)
+        {
+            if (listModel.get(j).username.includes(text) === false &&
+                listModel.get(j).email.includes(text) === false &&
+                listModel.get(j).role_id.includes(text) === false &&
+                addMembersForm.selectedUserIds.includes(listModel.get(j).id) === false)
+            {
+                listModel.remove(j);
+                j=-1; //read from the start! Because index has changed after removing
+            }
+        }
+    }
+
     /* Reset and cleanup form */
     function resetForm(){
         addMembersForm.selectedUserIds = [];
@@ -33,46 +70,21 @@ Item {
         id: addMembersColumn
         anchors.left: parent.left
         anchors.top: parent.top
+        width: parent.width
         spacing: 10
 
         Label {
             text: qsTr("Members")
         }
-
-        RowLayout {
+        SearchBox {
+            id: memberSeachInput
             width: parent.width
+            height: 40
 
-            TextField {
-                id: memberSeachInput
-                width: parent.width
-                placeholderText: qsTr("Search users")
-            }
-
-            Button {
-                id: searchMembersButton
-                Layout.alignment: Qt.AlignRight
-                text: "Search"
-                onClicked: {
-                    /* if input is empty, dont search and remove all unselected users from list if exists */
-                    if (memberSeachInput.text == "") {
-                        if (listModel.count > 0) {
-                            addMembersForm.removeUnselectedUsersFromList();
-                        }
-                        return
-                    }
-
-                    addMembersForm.removeUnselectedUsersFromList(); // Remove all unselected elements in list
-                    var results = user.search(memberSeachInput.text, addMembersForm.ignoreUserIds) // Find users with username or email like input
-
-                    /* Append results to list */
-                    for(var i in results) {
-                        if (addMembersForm.selectedUserIds.includes(results[i].id)) continue // dont add if user already selected
-
-                        var objectToAppend = {"id": results[i].id,"username": results[i].username, "email": results[i].email, "roleid": results[i].roleid, "added": false};
-                        listModel.append(objectToAppend)
-                    }
-                    memberSeachInput.text = "" // reset input field
-                }
+            placeholder: "Search members..."
+            onFilterChanged: {
+                //console.log(text)
+                addMembersForm.filterProjectMembers(text)
             }
         }
     }
@@ -169,7 +181,7 @@ Item {
                 Label {
                     Layout.alignment: Qt.AlignLeft
                     Layout.preferredWidth: parent.width * 0.25
-                    text: model.roleid
+                    text: model.role_id
                 }
                 Item {
                     width: parent.width * 0.25
