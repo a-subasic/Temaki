@@ -162,6 +162,8 @@ bool User::removeProjectMember(int projectId, int userId) {
     query.bindValue(":userId", userId);
     bool success = query.exec();
 
+    m_project_members = getProjectMembers(projectId);
+    projectMembersChanged();
     return success;
 }
 
@@ -185,5 +187,9 @@ bool User::addProjectMembers(int projectId, const QStringList& memberIds){
         }
     }
     QSqlDatabase::database().commit();
+
+    m_project_members = getProjectMembers(projectId);
+    projectMembersChanged();
+
     return success;
 }

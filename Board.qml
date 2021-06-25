@@ -28,36 +28,22 @@ Page {
         console.log("current project id", project.id)
 
         if(project.id !== -1) {
-            getTasks()
+            initBoard()
         }
     }
 
-    Connections {
-        target: project
-        function onIdChanged() {
-            getTasks()
-        }
-    }
+    function initBoard() {
+        /* Project labels */
+        board.labelPriorities = [...new Set(label.project_labels.priorities.map(function(obj) {return obj.name;}))]
+        board.labelTypes = [...new Set(label.project_labels.types.map(function(obj) {return obj.name;}))]
+        multiselectChange()
 
-    Connections {
-        target: user
-        function onProjectMembersChanged() {
-            board.memberUsernames = user.project_members.map(function(obj) {return obj.username;})
-            multiselectChange()
-        }
-    }
+        /* Project member */
+        board.memberUsernames = user.project_members.map(function(obj) {return obj.username;})
+        multiselectChange()
 
-    Connections {
-        target: label
-        function onProjectLabelsChanged() {
-            board.labelPriorities = [...new Set(label.project_labels.priorities.map(function(obj) {return obj.name;}))]
-            board.labelTypes = [...new Set(label.project_labels.types.map(function(obj) {return obj.name;}))]
-            multiselectChange()
-        }
-    }
-
-    function getTasks() {
-        var t = task.getForProjectByStatus(project.id, 1)
+        /* Tasks */
+        var t = task.project_tasks
         tasksModel.clear()
         for(var i in t) {
             tasksModel.append({
@@ -69,11 +55,15 @@ Page {
                 "title": t[i].title,
             })
         }
-        user.getProjectMembers(project.id)
-        label.getProjectLabels(project.id)
-
         noProjectLoader.active = false
         boardLoader.active = true
+    }
+
+    Connections {
+        target: project
+        function onIdChanged() {
+            initBoard()
+        }
     }
 
     Loader {

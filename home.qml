@@ -26,4 +26,13 @@ Grid {
         id: bodyStackView
     }
 
+    /* on project ID change: get project tasks, members and labels*/
+    Connections {
+        target: project
+        function onIdChanged() {
+            task.getForProjectByStatus(project.id)
+            user.getProjectMembers(project.id)
+            label.getProjectLabels(project.id)
+        }
+    }
 }

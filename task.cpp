@@ -7,13 +7,12 @@ Task::Task(QObject *parent) : QObject(parent)
 
 }
 
-QList<QVariant> Task::getForProjectByStatus(const int& projectId, const int& statusId) {
+QList<QVariant> Task::getForProjectByStatus(const int& projectId) {
     QList<QVariant> result;
 
     QSqlQuery query;
     query.prepare("SELECT * FROM Task WHERE project_id = :projectId");
     query.bindValue(":projectId", projectId);
-    query.bindValue(":statusId", statusId);
     query.exec();
 
     while (query.next()) {
@@ -40,5 +39,8 @@ QList<QVariant> Task::getForProjectByStatus(const int& projectId, const int& sta
 
         result.append(QVariant::fromValue(map));
     }
+    m_project_tasks = result;
+    projectTasksChanged();
+
     return result;
 }

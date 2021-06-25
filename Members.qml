@@ -15,17 +15,23 @@ Page {
     height: parent.height
 
     Component.onCompleted: {
-        if(project.id !== -1) getProjectMembers()
+        if(project.id !== -1) initMembers()
     }
 
-    Connections {
-        target: project
-        function onIdChanged() {
-            getProjectMembers()
+    /* clear membersModel (listView) and set values to membersList */
+    function initMembers() {
+        membersModel.clear() // clear current membersModel
+        for(var i in user.project_members) { // set membersModel values
+            membersModel.append({
+                "id": user.project_members[i].id,
+                "username": user.project_members[i].username,
+                "email": user.project_members[i].email,
+                "role_id": user.project_members[i].role_id,
+            })
         }
+        noProjectLoader.active = false
+        membersLoader.active = true
     }
-
-    property var memberList
 
     /* reset membersModel to membersList and filter values */
     function filterProjectMembers(text) {
@@ -43,33 +49,10 @@ Page {
         }
     }
 
-    /* get memberList and set values of membersModel */
-    function getProjectMembers() {
-        memberList = user.getProjectMembers(project.id) // get member list
-        setProjectMembersModel()
-
-        noProjectLoader.active = false
-        membersLoader.active = true
-    }
-
-    /* clear membersModel (listView) and set values to membersList */
-    function setProjectMembersModel() {
-        membersModel.clear() // clear current membersModel
-        for(var i in memberList) { // set membersModel values
-            membersModel.append({
-                "id": memberList[i].id,
-                "username": memberList[i].username,
-                "email": memberList[i].email,
-                "role_id": memberList[i].role_id,
-            })
-        }
-    }
-
     Connections {
-        target: project
-
-        function onIdChanged(id) {
-            membersPage.getProjectMembers(id)
+        target: user
+        function onProjectMembersChanged(id) {
+            initMembers()
         }
     }
 
@@ -235,7 +218,6 @@ Page {
 
                             confirmDialog.accepted.connect(function(){
                                 user.removeProjectMember(project.id, model.id)
-                                membersPage.getProjectMembers(project.id)
                             })
 
                             confirmDialog.rejected.connect(function(){
@@ -264,7 +246,7 @@ Page {
 
             Editors.AddMembers {
                 id: addMembersForm
-                ignoreUserIds: membersPage.memberList.map(function(obj) {return obj.id;})
+                ignoreUserIds: user.project_members.map(function(obj) {return obj.id;})
                 anchors.top: addMembersDialog.top
                 width: parent.width
                 height: parent.height - 20
@@ -288,8 +270,6 @@ Page {
                     addMembersDialog.open()
                     failedDialog.open()
                     return
-                } else {
-                    membersPage.getProjectMembers(project.id)
                 }
             }
 

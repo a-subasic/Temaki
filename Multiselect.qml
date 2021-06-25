@@ -10,9 +10,6 @@ ComboBox {
 
     model: ListModel {
         id: cbItems
-        ListElement { name: "One"; selected: false }
-        ListElement { name: "Two"; selected: false }
-        ListElement { name: "Three"; selected: false }
     }
 
     /* If there are any items defined, default combobox values will be replaced */
