@@ -83,7 +83,6 @@ Item {
 
             placeholder: "Search members..."
             onFilterChanged: {
-                //console.log(text)
                 addMembersForm.filterProjectMembers(text)
             }
         }

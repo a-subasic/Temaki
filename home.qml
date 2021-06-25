@@ -26,7 +26,7 @@ Grid {
         id: bodyStackView
     }
 
-    /* on project ID change: get project tasks, members and labels*/
+    /* Create Project */
     Connections {
         target: project
         function onIdChanged() {
