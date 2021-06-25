@@ -18,6 +18,7 @@ Page {
         id: tasksModel
     }
 
+    property string thekey: "special key here"
     property var memberUsernames: [] = []
     property var labelPriorities: [] = []
     property var labelTypes: [] = []
@@ -107,7 +108,7 @@ Page {
 
                 Connections {
                     target: board
-                    onMultiselectChange: {
+                    function onMultiselectChange() {
                         membersMultiselect.initComboboxItems(board.memberUsernames);
                         priorityMultiselect.initComboboxItems(board.labelPriorities);
                         typeMultiselect.initComboboxItems(board.labelTypes);
@@ -187,34 +188,66 @@ Page {
                                 }
                             }
 
-                            ScrollView {
+                            DropArea {
                                 width: parent.width
                                 height: parent.height - status1.height
                                 anchors.top: status1.bottom
-                                clip: true
-                                ScrollBar.horizontal.policy: ScrollBar.AlwaysOff
-                                ScrollBar.vertical.interactive: true
+                                Drag.keys: [thekey]
 
-                                ListView {
+                                onEntered: {
+                                    backlogBorder.border.color = "red"
+                                    drag.source.caught = true;
+                                }
+                                onExited: {
+                                    backlogBorder.border.color = "transparent"
+                                    drag.source.caught = false;
+                                }
+
+                                onDropped: {
+                                    console.log("dropped")
+                                    console.log(drag.source.task_id)
+                                }
+
+                                Rectangle {
+                                    id: backlogBorder
+                                    border.color: 'transparent';
+                                    border.width: 4
+                                    color: 'transparent'
+                                    z: 1
+                                    anchors.fill: parent
+                                  }
+
+
+                                ScrollView {
                                     width: parent.width
+//                                    height: parent.height - status1.height
                                     height: parent.height
-                                    focus: true
-                                    orientation: Qt.Vertical
+//                                    anchors.top: status1.bottom
+                                    clip: true
+                                    ScrollBar.horizontal.policy: ScrollBar.AlwaysOff
+                                    ScrollBar.vertical.interactive: true
 
-                                    model: tasksModel
-                                    delegate: Item {
-                                        width: tasksContainer.width
-                                        height: status_id == Status.BACKLOG ? 105 : 0
-                                        visible: status_id == Status.BACKLOG
+                                    ListView {
+                                        width: parent.width
+                                        height: parent.height
+                                        focus: true
+                                        orientation: Qt.Vertical
 
-                                        Rectangle {
-                                            width: parent.width
-                                            height: 100
-                                            color: "green"
+                                        model: tasksModel
+                                        delegate: Item {
+                                            width: tasksContainer.width
+                                            height: status_id == Status.BACKLOG ? 105 : 0
+                                            visible: status_id == Status.BACKLOG
 
-                                            Label {
-                                                anchors.centerIn: parent
-                                                text: title
+                                            Rectangle {
+                                                width: parent.width
+                                                height: 100
+                                                color: "green"
+
+                                                Label {
+                                                    anchors.centerIn: parent
+                                                    text: title
+                                                }
                                             }
                                         }
                                     }
@@ -249,7 +282,7 @@ Page {
                                 width: parent.width
                                 height: parent.height - status2.height
                                 anchors.top: status2.bottom
-                                clip: true
+//                                clip: true
                                 ScrollBar.horizontal.policy: ScrollBar.AlwaysOff
                                 ScrollBar.vertical.interactive: true
 
@@ -261,9 +294,19 @@ Page {
 
                                     model: tasksModel
                                     delegate: Item {
+                                        property string task_id: id
+
+                                        id: taskDraggable
+
                                         width: tasksContainer.width
                                         height: status_id == Status.ACTIVE ? 105 : 0
                                         visible: status_id == Status.ACTIVE
+
+                                        property point beginDrag
+                                        property bool caught: false
+
+                                        Drag.active: dragArea.drag.active
+                                        Drag.keys: [thekey]
 
                                         Rectangle {
                                             width: parent.width
@@ -274,6 +317,32 @@ Page {
                                                 anchors.centerIn: parent
                                                 text: title
                                             }
+                                        }
+
+                                        MouseArea {
+                                            id: dragArea
+                                            anchors.fill: parent
+                                            drag.target: taskDraggable
+
+                                            onPressed: {
+                                                taskDraggable.beginDrag = Qt.point(taskDraggable.x, taskDraggable.y);
+                                            }
+
+                                          onReleased: {
+                                                if(!taskDraggable.caught) {
+                                                    backAnimX.from = taskDraggable.x;
+                                                    backAnimX.to = beginDrag.x;
+                                                    backAnimY.from = taskDraggable.y;
+                                                    backAnimY.to = beginDrag.y;
+                                                    backAnim.start()
+                                                }
+                                            }
+                                        }
+
+                                        ParallelAnimation {
+                                           id: backAnim
+                                           SpringAnimation { id: backAnimX; target: taskDraggable; property: "x"; duration: 500; spring: 2; damping: 0.2 }
+                                           SpringAnimation { id: backAnimY; target: taskDraggable; property: "y"; duration: 500; spring: 2; damping: 0.2 }
                                         }
                                     }
                                 }
