@@ -31,6 +31,7 @@ private:
 
 public slots:
     QList<QVariant> getForProjectByStatus(const int& projectId);
+    void updateTaskStatus(const int& taskId, const int& statusId);
 };
 
 #endif // TASK_H

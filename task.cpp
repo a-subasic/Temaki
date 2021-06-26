@@ -23,11 +23,6 @@ QList<QVariant> Task::getForProjectByStatus(const int& projectId) {
         int status_id = query.value(5).toInt();
         QString title = query.value(6).toString();
 
-        //qInfo() << owner_id;
-        //qInfo() << estimated_time;
-        //qInfo() << spent_time;
-        //qInfo() << status_id;
-
         QVariantMap map;
         map.insert("id", id);
         map.insert("owner_id", owner_id);
@@ -40,7 +35,15 @@ QList<QVariant> Task::getForProjectByStatus(const int& projectId) {
         result.append(QVariant::fromValue(map));
     }
     m_project_tasks = result;
-    projectTasksChanged();
+    emit projectTasksChanged();
 
     return result;
+}
+
+void Task::updateTaskStatus(const int& taskId, const int& statusId) {
+    QSqlQuery query;
+    query.prepare("UPDATE Task SET status_id = :statusId WHERE id = :taskId");
+    query.bindValue(":taskId", taskId);
+    query.bindValue(":statusId", statusId);
+    query.exec();
 }

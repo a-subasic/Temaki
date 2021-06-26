@@ -18,7 +18,6 @@ Page {
         id: tasksModel
     }
 
-    property string thekey: "special key here"
     property var memberUsernames: [] = []
     property var labelPriorities: [] = []
     property var labelTypes: [] = []
@@ -165,307 +164,33 @@ Page {
                     anchors.fill: parent
                     spacing: 10
 
-                    Column {
-                        Rectangle {
-                            id: tasksContainer
-                            width: item2.width/4 - 10 + row.spacing/4
-                            height: item2.height
-                            color: "lightgrey"
-                            border.color: "grey"
-
-                            Rectangle {
-                                id: status1
-                                width: parent.width
-                                border.color: "black"
-                                border.width: 2
-                                color: "white"
-                                height: 40
-
-                                Label {
-                                    anchors.horizontalCenter: parent.horizontalCenter
-                                    anchors.verticalCenter: parent.verticalCenter
-                                    text: Constants.Status.BACKLOG
-                                }
-                            }
-
-                            DropArea {
-                                width: parent.width
-                                height: parent.height - status1.height
-                                anchors.top: status1.bottom
-                                Drag.keys: [thekey]
-
-                                onEntered: {
-                                    backlogBorder.border.color = "red"
-                                    drag.source.caught = true;
-                                }
-                                onExited: {
-                                    backlogBorder.border.color = "transparent"
-                                    drag.source.caught = false;
-                                }
-
-                                onDropped: {
-                                    console.log("dropped")
-                                    console.log(drag.source.task_id)
-                                }
-
-                                Rectangle {
-                                    id: backlogBorder
-                                    border.color: 'transparent';
-                                    border.width: 4
-                                    color: 'transparent'
-                                    z: 1
-                                    anchors.fill: parent
-                                  }
-
-
-                                ScrollView {
-                                    width: parent.width
-//                                    height: parent.height - status1.height
-                                    height: parent.height
-//                                    anchors.top: status1.bottom
-                                    clip: true
-                                    ScrollBar.horizontal.policy: ScrollBar.AlwaysOff
-                                    ScrollBar.vertical.interactive: true
-
-                                    ListView {
-                                        width: parent.width
-                                        height: parent.height
-                                        focus: true
-                                        orientation: Qt.Vertical
-
-                                        model: tasksModel
-                                        delegate: Item {
-                                            width: tasksContainer.width
-                                            height: status_id == Status.BACKLOG ? 105 : 0
-                                            visible: status_id == Status.BACKLOG
-
-                                            Rectangle {
-                                                width: parent.width
-                                                height: 100
-                                                color: "green"
-
-                                                Label {
-                                                    anchors.centerIn: parent
-                                                    text: title
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
+                    TasksColumn {
+                        statusLabel: Constants.Status.BACKLOG
+                        statusId: Status.BACKLOG
                     }
 
-                    Column {
-                        Rectangle {
-                            width: item2.width/4 - 10 + row.spacing/4
-                            height: item2.height
-                            color: "lightgrey"
-                            border.color: "grey"
-
-                            Rectangle {
-                                id: status2
-                                width: parent.width
-                                border.color: "black"
-                                border.width: 2
-                                color: "white"
-                                height: 40
-
-                                Label {
-                                    anchors.horizontalCenter: parent.horizontalCenter
-                                    anchors.verticalCenter: parent.verticalCenter
-                                    text: Constants.Status.ACTIVE
-                                }
-                            }
-
-                            ScrollView {
-                                width: parent.width
-                                height: parent.height - status2.height
-                                anchors.top: status2.bottom
-//                                clip: true
-                                ScrollBar.horizontal.policy: ScrollBar.AlwaysOff
-                                ScrollBar.vertical.interactive: true
-
-                                ListView {
-                                    width: parent.width
-                                    height: parent.height
-                                    focus: true
-                                    orientation: Qt.Vertical
-
-                                    model: tasksModel
-                                    delegate: Item {
-                                        property string task_id: id
-
-                                        id: taskDraggable
-
-                                        width: tasksContainer.width
-                                        height: status_id == Status.ACTIVE ? 105 : 0
-                                        visible: status_id == Status.ACTIVE
-
-                                        property point beginDrag
-                                        property bool caught: false
-
-                                        Drag.active: dragArea.drag.active
-                                        Drag.keys: [thekey]
-
-                                        Rectangle {
-                                            width: parent.width
-                                            height: 100
-                                            color: "green"
-
-                                            Label {
-                                                anchors.centerIn: parent
-                                                text: title
-                                            }
-                                        }
-
-                                        MouseArea {
-                                            id: dragArea
-                                            anchors.fill: parent
-                                            drag.target: taskDraggable
-
-                                            onPressed: {
-                                                taskDraggable.beginDrag = Qt.point(taskDraggable.x, taskDraggable.y);
-                                            }
-
-                                          onReleased: {
-                                                if(!taskDraggable.caught) {
-                                                    backAnimX.from = taskDraggable.x;
-                                                    backAnimX.to = beginDrag.x;
-                                                    backAnimY.from = taskDraggable.y;
-                                                    backAnimY.to = beginDrag.y;
-                                                    backAnim.start()
-                                                }
-                                            }
-                                        }
-
-                                        ParallelAnimation {
-                                           id: backAnim
-                                           SpringAnimation { id: backAnimX; target: taskDraggable; property: "x"; duration: 500; spring: 2; damping: 0.2 }
-                                           SpringAnimation { id: backAnimY; target: taskDraggable; property: "y"; duration: 500; spring: 2; damping: 0.2 }
-                                        }
-                                    }
-                                }
-                            }
-                        }
+                    TasksColumn {
+                        statusLabel: Constants.Status.ACTIVE
+                        statusId: Status.ACTIVE
                     }
-                    Column {
-                        Rectangle {
-                            width: item2.width/4 - 10 + row.spacing/4
-                            height: item2.height
-                            color: "lightgrey"
-                            border.color: "grey"
 
-                            Rectangle {
-                                id: status3
-                                width: parent.width
-                                border.color: "black"
-                                border.width: 2
-                                color: "white"
-                                height: 40
-
-                                Label {
-                                    anchors.horizontalCenter: parent.horizontalCenter
-                                    anchors.verticalCenter: parent.verticalCenter
-                                    text: Constants.Status.IN_REVIEW
-                                }
-                            }
-
-                            ScrollView {
-                                width: parent.width
-                                height: parent.height - status3.height
-                                anchors.top: status3.bottom
-                                clip: true
-                                ScrollBar.horizontal.policy: ScrollBar.AlwaysOff
-                                ScrollBar.vertical.interactive: true
-
-                                ListView {
-                                    width: parent.width
-                                    height: parent.height
-                                    focus: true
-                                    orientation: Qt.Vertical
-
-                                    model: tasksModel
-                                    delegate: Item {
-                                        width: tasksContainer.width
-                                        height: status_id == Status.IN_REVIEW ? 105 : 0
-                                        visible: status_id == Status.IN_REVIEW
-
-                                        Rectangle {
-                                            width: parent.width
-                                            height: 100
-                                            color: "green"
-
-                                            Label {
-                                                anchors.centerIn: parent
-                                                text: title
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
+                    TasksColumn {
+                        statusLabel: Constants.Status.IN_REVIEW
+                        statusId: Status.IN_REVIEW
                     }
-                    Column {
-                        Rectangle {
-                            width: item2.width/4 - 10 + row.spacing/4
-                            height: item2.height
-                            color: "lightgrey"
-                            border.color: "grey"
 
-                            Rectangle {
-                                id: status4
-                                width: parent.width
-                                border.color: "black"
-                                border.width: 2
-                                color: "white"
-                                height: 40
-
-                                Label {
-                                    anchors.horizontalCenter: parent.horizontalCenter
-                                    anchors.verticalCenter: parent.verticalCenter
-                                    text: Constants.Status.CLOSED
-                                }
-                            }
-
-                            ScrollView {
-                                width: parent.width
-                                height: parent.height - status4.height
-                                anchors.top: status4.bottom
-                                clip: true
-                                ScrollBar.horizontal.policy: ScrollBar.AlwaysOff
-                                ScrollBar.vertical.interactive: true
-
-                                ListView {
-                                    width: parent.width
-                                    height: parent.height
-                                    focus: true
-                                    orientation: Qt.Vertical
-
-                                    model: tasksModel
-                                    delegate: Item {
-                                        width: tasksContainer.width
-                                        height: status_id == Status.CLOSED ? 105 : 0
-                                        visible: status_id == Status.CLOSED
-
-                                        Rectangle {
-                                            width: parent.width
-                                            height: 100
-                                            color: "green"
-
-                                            Label {
-                                                anchors.centerIn: parent
-                                                text: title
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
+                    TasksColumn {
+                        statusLabel: Constants.Status.CLOSED
+                        statusId: Status.CLOSED
                     }
                 }
             }
         }
+    }
+
+    Item {
+        id: dragContainer
+        anchors.fill: parent
     }
 }
 

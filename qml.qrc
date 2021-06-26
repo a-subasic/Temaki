@@ -17,6 +17,7 @@
         <file>Analytics.qml</file>
         <file>Labels.qml</file>
         <file>Members.qml</file>
+        <file>TasksColumn.qml</file>
     </qresource>
     <qresource prefix="/layouts">
         <file>Body.qml</file>
@@ -34,5 +35,8 @@
         <file>Multiselect.qml</file>
         <file>SearchBox.qml</file>
         <file>ConfirmationDialog.qml</file>
+    </qresource>
+    <qresource prefix="/pages/components">
+        <file>TasksColumn.qml</file>
     </qresource>
 </RCC>
