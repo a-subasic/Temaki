@@ -21,14 +21,16 @@ QList<QVariant> Task::getForProjectByStatus(const int& projectId) {
           "(SELECT Label.name as priority, Label.id as priority_id, Label.color as priority_color, Task.id as tid1 FROM Label"
           "   INNER JOIN TaskLabels on Label.id = TaskLabels.label_id"
           "   INNER JOIN Task on TaskLabels.task_id = Task.id"
-          "   WHERE Label.label_type_id = 1))"
+          "   WHERE Label.label_type_id = %1))"
           "on (Task.id = tid1)"
           "LEFT JOIN((SELECT Label.name as type, Label.id as type_id, Label.color as type_color, Task.id as tid2 FROM Label"
           "   INNER JOIN TaskLabels on Label.id = TaskLabels.label_id"
           "   INNER JOIN Task on TaskLabels.task_id = Task.id"
-          "   WHERE Label.label_type_id = 2)"
+          "   WHERE Label.label_type_id = %2)"
           ") on (Task.id = tid2)"
-          "WHERE Task.project_id = %1").arg(projectId);
+          "WHERE Task.project_id = %3").arg(Label::LabelType::Priority).arg(Label::LabelType::Type).arg(projectId);
+
+    qWarning() << querystring;
 
     success = query.exec(querystring);
 
