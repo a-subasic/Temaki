@@ -35,7 +35,7 @@ Page {
 
     /* reset membersModel to membersList and filter values */
     function filterProjectMembers(text) {
-        setProjectMembersModel()
+        initMembers()
         // Remove all project members not containing filter text
         for (var j=0; j < membersModel.count; j++)
         {

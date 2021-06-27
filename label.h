@@ -75,6 +75,7 @@ private:
 public slots:
     QVariant getProjectLabels(int projectId); /* get all labels from project_id */
     QVariant getLabelById(int taskId, int typeId);
+    QList<QVariant> getLabels();
 };
 
 #endif // LABEL_H

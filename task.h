@@ -22,6 +22,13 @@ public:
             emit projectTasksChanged();
         }
     }
+    enum TaskStatus {
+      Backlog = 1,
+      Active = 2,
+      InReview = 3,
+      Closed = 4
+    };
+    Q_ENUM(TaskStatus)
 
 signals:
     void projectTasksChanged();
@@ -31,6 +38,8 @@ private:
 public slots:
     QList<QVariant> getForProjectByStatus(const int& projectId);
     void updateTaskStatus(const int& taskId, const int& statusId);
+    QVariant create(const QString& title, const int& project_id, const QList<int>& selectedLabelIds, const int& estimatedTime, const int ownerId = NULL);
+
 };
 
 #endif // TASK_H

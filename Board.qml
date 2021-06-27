@@ -35,15 +35,22 @@ Page {
 
     function initBoard() {
         /* Project labels */
-        board.labelPriorities = [...new Set(label.project_labels.priorities.map(function(obj) {return obj.name;}))]
-        board.labelTypes = [...new Set(label.project_labels.types.map(function(obj) {return obj.name;}))]
+        board.labelPriorities = [...new Set(label.project_labels.priorities.map(function(obj) {return {"id": obj.id, "name": obj.name};}))]
+        board.labelTypes = [...new Set(label.project_labels.types.map(function(obj) {return {"id": obj.id, "name": obj.name};}))]
         multiselectChange()
 
         /* Project member */
-        board.memberUsernames = user.project_members.map(function(obj) {return obj.username;})
+        board.memberUsernames = user.project_members.map(function(obj) {return {"id": obj.id, "name": obj.username}})
         multiselectChange()
 
         /* Tasks */
+        initTasks()
+        noProjectLoader.active = false
+        boardLoader.active = true
+    }
+
+    /* Reloads tasks into board */
+    function initTasks() {
         var t = task.project_tasks
         tasksModel.clear()
         for(var i in t) {
@@ -56,14 +63,19 @@ Page {
                 "title": t[i].title,
             })
         }
-        noProjectLoader.active = false
-        boardLoader.active = true
     }
 
     Connections {
         target: project
         function onIdChanged() {
             initBoard()
+        }
+    }
+
+    Connections {
+        target: task
+        function onProjectTasksChanged() {
+            initTasks()
         }
     }
 

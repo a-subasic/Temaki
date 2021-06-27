@@ -40,10 +40,65 @@ QList<QVariant> Task::getForProjectByStatus(const int& projectId) {
     return result;
 }
 
+
 void Task::updateTaskStatus(const int& taskId, const int& statusId) {
     QSqlQuery query;
     query.prepare("UPDATE Task SET status_id = :statusId WHERE id = :taskId");
     query.bindValue(":taskId", taskId);
     query.bindValue(":statusId", statusId);
     query.exec();
+}
+
+// if ownerId is NULL, 0 is entered in db. (valid Ids start from 1)
+QVariant Task::create(const QString& title, const int& project_id, const QList<int>& selectedLabelIds, const int& estimatedTime, const int ownerId) {
+    bool success = false;
+    int task_id = 0;
+
+    // Prepare for transaction
+    QSqlDatabase::database().transaction();
+
+    QSqlQuery taskQuery;
+    taskQuery.prepare("INSERT INTO Task (owner_id, estimated_time, spent_time, project_id, status_id, title) "
+                         "VALUES (:owner_id, :estimated_time, :spent_time, :project_id, :status_id, :title)");
+
+    taskQuery.bindValue(":owner_id", ownerId);
+    taskQuery.bindValue(":estimated_time", estimatedTime);
+    taskQuery.bindValue(":spent_time", 0);
+    taskQuery.bindValue(":project_id", project_id);
+    taskQuery.bindValue(":status_id", TaskStatus::Backlog);
+    taskQuery.bindValue(":title", title);
+
+    success = taskQuery.exec();
+
+    if(success == false) {
+        qWarning() << QString("Failed to execute 'Task.create' query. ERROR: %3").arg(taskQuery.lastError().text());
+    }
+    else {
+        task_id = taskQuery.lastInsertId().toInt();
+        qWarning() << "ID: " << task_id;
+
+        foreach(const int& labelId, selectedLabelIds){
+            QSqlQuery taskLabelsQuery;
+            taskLabelsQuery.prepare("INSERT INTO TaskLabels (task_id, label_id) VALUES (:task_id, :label_id)");
+            taskLabelsQuery.bindValue(":task_id", task_id);
+            taskLabelsQuery.bindValue(":label_id", labelId);
+
+            if(!taskLabelsQuery.exec()) {
+                qWarning() << QString("Failed to execute 'Task.create' query. ERROR: %3").arg(taskLabelsQuery.lastError().text());
+                qWarning() << QString("Rollback transaction!");
+                success = false;
+                QSqlDatabase::database().rollback(); // rollback if failed to insert TaskLabels
+                break;
+            }
+        }
+    }
+
+    if (success) QSqlDatabase::database().commit();
+    QVariantMap response;
+    response.insert("success", success);
+    response.insert("task_id", task_id);
+
+    getForProjectByStatus(project_id);
+
+    return QVariant::fromValue(response);
 }
