@@ -38,7 +38,7 @@ private:
 public slots:
     QList<QVariant> getForProjectByStatus(const int& projectId);
     void updateTaskStatus(const int& taskId, const int& statusId);
-    QVariant create(const QString& title, const int& project_id, const QList<int>& selectedLabelIds, const int& estimatedTime, const int ownerId = NULL);
+    QVariant create(const QString& title, const int& project_id, const int& estimatedTime, const int& labelTypeId = NULL, const int& labelPriorityId = NULL, const int& ownerId = NULL);
 
 };
 

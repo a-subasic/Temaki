@@ -27,6 +27,7 @@ QList<QVariant> Label::getLabels() {
         QVariantMap map;
         map.insert("id", id);
         map.insert("name", name);
+        map.insert("type_id", type_id);
         map.insert("type", type);
         map.insert("color", color);
 

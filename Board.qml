@@ -7,6 +7,7 @@ import QtQuick.Controls 2.13
 
 import "qrc:/const.js" as Constants
 import "qrc:/components"
+import "qrc:/pages/components"
 import "qrc:/editors" as Editors
 
 Page {

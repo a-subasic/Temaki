@@ -15,7 +15,7 @@ Component {
         visible:false
         title: qsTr('Create Task - wip')
         width: 400
-        height: 350
+        height: 450
         standardButtons: Dialog.Discard | Dialog.Save
         anchors.centerIn: parent
 
@@ -34,17 +34,29 @@ Component {
 
         function initLabels(){
             var labels = label.getLabels()
-            var labelItems = labels.map(function(obj) {return {"id": obj.id, "name": obj.name}})
-            labelMultiselect.initComboboxItems(labelItems)
+            for(var i in labels) {
+                if (labels[i].type == "Priority") {
+                    labelPriorityModel.append({"id": labels[i].id, "name": labels[i].name})
+                } else {
+                    labelTypeModel.append({"id": labels[i].id, "name": labels[i].name})
+                }
+            }
         }
 
         ListModel {
             id: membersModel
         }
 
+        ListModel {
+            id: labelTypeModel
+        }
+
+        ListModel {
+            id: labelPriorityModel
+        }
         onAccepted: {
             /* Validate Task title */
-            if (taskTitleText.input.text.length == 0) {
+            if (!taskTitleText.isValid) {
                 failedDialog.description = "Title is required!";
                 createTaskDialog.open()
                 failedDialog.open()
@@ -52,8 +64,11 @@ Component {
             }
 
             /* Create Task */
-            var selectedLabelIds = labelMultiselect.getSelectedItems().map(function(obj) { if (obj.selected )return obj.id})
-            var success = task.create(taskTitleText.input.text, project.id, selectedLabelIds, estimatedTimeText.value, selectedOwnerId.text ?? null);
+            var labelPriorityId = labelPriorityCombobox.isSelected ? labelPriorityCombobox.model.get(labelPriorityCombobox.currentIndex).id : null
+            var labelTypeId = labelTypeCombobox.isSelected ? labelTypeCombobox.model.get(labelTypeCombobox.currentIndex).id : null
+            var ownerId = membersCombobox.isSelected ? membersCombobox.model.get(membersCombobox.currentIndex).id : null
+
+            var success = task.create(taskTitleText.input.text, project.id, estimatedTimeText.value, labelTypeId, labelPriorityId, ownerId);
 
             /* If Creation failed, show message */
             if(!success) {
@@ -81,39 +96,53 @@ Component {
                 id: column
                 anchors.fill: parent
                 spacing: 20
+
                 Input {
                     id: taskTitleText
                     labelName: "Title"
                     errorText: "Title is required"
+                    validatorRegex: "^[A-Za-z0-9 _]*[A-Za-z0-9][A-Za-z0-9 _]*$"
                 }
 
-                Label {
-                    id: selectedOwnerId
-                    visible: false
+                ComboBox {
+                    property bool isSelected: false
+                    id: membersCombobox
+                    displayText: "Assign Member"
+                    textRole: "name"
+                    width: parent.width
+                    model: membersModel
+                    onCurrentTextChanged: {
+                        membersCombobox.displayText = membersCombobox.currentText
+                        isSelected = true
+                    }
                 }
-
                 Row {
                     width: parent.width
                     spacing: 10
 
-                    Multiselect {
-                        id: labelMultiselect
-                        title: "Labels"
+                    ComboBox {
+                        property bool isSelected: false
+                        id: labelTypeCombobox
+                        displayText: "Select Label"
+                        textRole: "name"
                         width: parent.width/2 - parent.spacing/2
-                        maxHeight: 150
+                        model: labelTypeModel
+                        onCurrentTextChanged: {
+                            labelTypeCombobox.displayText = labelTypeCombobox.currentText
+                            isSelected = true
+                        }
                     }
 
                     ComboBox {
                         property bool isSelected: false
-                        id: membersCombobox
-                        displayText: "Assign Member"
+                        id: labelPriorityCombobox
+                        displayText: "Select Priority"
                         textRole: "name"
                         width: parent.width/2 - parent.spacing/2
-                        model: membersModel
+                        model: labelPriorityModel
                         onCurrentTextChanged: {
+                            labelPriorityCombobox.displayText = labelPriorityCombobox.currentText
                             isSelected = true
-                            membersCombobox.displayText = membersCombobox.currentText
-                            selectedOwnerId.text = membersModel.get(currentIndex).id
                         }
                     }
                 }

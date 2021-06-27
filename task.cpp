@@ -50,7 +50,7 @@ void Task::updateTaskStatus(const int& taskId, const int& statusId) {
 }
 
 // if ownerId is NULL, 0 is entered in db. (valid Ids start from 1)
-QVariant Task::create(const QString& title, const int& project_id, const QList<int>& selectedLabelIds, const int& estimatedTime, const int ownerId) {
+QVariant Task::create(const QString& title, const int& project_id, const int& estimatedTime, const int& labelTypeId, const int& labelPriorityId, const int& ownerId) {
     bool success = false;
     int task_id = 0;
 
@@ -77,19 +77,21 @@ QVariant Task::create(const QString& title, const int& project_id, const QList<i
         task_id = taskQuery.lastInsertId().toInt();
         qWarning() << "ID: " << task_id;
 
-        foreach(const int& labelId, selectedLabelIds){
-            QSqlQuery taskLabelsQuery;
-            taskLabelsQuery.prepare("INSERT INTO TaskLabels (task_id, label_id) VALUES (:task_id, :label_id)");
-            taskLabelsQuery.bindValue(":task_id", task_id);
-            taskLabelsQuery.bindValue(":label_id", labelId);
+        QSqlQuery taskLabelTypeQuery;
+        taskLabelTypeQuery.prepare("INSERT INTO TaskLabels (task_id, label_id) VALUES (:task_id, :label_id)");
+        taskLabelTypeQuery.bindValue(":task_id", task_id);
+        taskLabelTypeQuery.bindValue(":label_id", labelTypeId);
 
-            if(!taskLabelsQuery.exec()) {
-                qWarning() << QString("Failed to execute 'Task.create' query. ERROR: %3").arg(taskLabelsQuery.lastError().text());
-                qWarning() << QString("Rollback transaction!");
-                success = false;
-                QSqlDatabase::database().rollback(); // rollback if failed to insert TaskLabels
-                break;
-            }
+        QSqlQuery taskLabelPriorityQuery;
+        taskLabelPriorityQuery.prepare("INSERT INTO TaskLabels (task_id, label_id) VALUES (:task_id, :label_id)");
+        taskLabelPriorityQuery.bindValue(":task_id", task_id);
+        taskLabelPriorityQuery.bindValue(":label_id", labelPriorityId);
+
+        if(!taskLabelTypeQuery.exec() || !taskLabelPriorityQuery.exec()) {
+            qWarning() << QString("Failed to execute 'Task.create' query. ERROR: %1, %2").arg(taskLabelTypeQuery.lastError().text(), taskLabelPriorityQuery.lastError().text());
+            qWarning() << QString("Rollback transaction!");
+            success = false;
+            QSqlDatabase::database().rollback(); // rollback if failed to insert TaskLabels
         }
     }
 
