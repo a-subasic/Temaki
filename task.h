@@ -1,7 +1,6 @@
 #ifndef TASK_H
 #define TASK_H
 
-
 #include <QObject>
 #include <QDebug>
 #include <QSqlQuery>

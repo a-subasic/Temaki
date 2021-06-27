@@ -80,6 +80,7 @@ public slots:
     QList<QVariant> getProjectMembers(int projectId); /* get all users (project members) from project_id */
     bool removeProjectMember(int projectId, int userId);
     bool addProjectMembers(int projectId, const QStringList& userIds);
+    QString getUsernameById(int id);
 };
 
 #endif // USER_H

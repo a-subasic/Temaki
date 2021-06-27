@@ -1,7 +1,8 @@
 import QtQuick 2.0
-import QtQuick.Controls 2.14
 import MyQMLEnums 13.37
 import QtQml.Models 2.1
+import QtQuick.Controls 2.13
+import QtQuick.Layouts 1.3
 
 import "qrc:/const.js" as Constants
 
@@ -84,7 +85,7 @@ Column {
                         id: taskDraggable
 
                         width: tasksContainer.width
-                        height: status_id == statusId ? 105 : 0
+                        height: status_id == statusId ? 165 : 0
                         visible: status_id == statusId
 
                         property point beginDrag
@@ -100,13 +101,54 @@ Column {
                                    .map(function(key) {return Constants.Status[key]})
 
                         Rectangle {
+                            id: taskContent
+                            radius: 10
                             width: parent.width
-                            height: 100
-                            color: "green"
+                            height: 160
+                            color: "lightblue"
+                            border.color: "darkgrey"
+                            border.width: 1
+                            z: 2
 
-                            Label {
-                                anchors.centerIn: parent
-                                text: title
+                            Column {
+                                anchors.fill: parent
+                                anchors.margins: 5
+                                spacing: 2
+
+                                Text {
+                                    verticalAlignment: Text.AlignVCenter
+                                    width: taskContent.width - 10
+                                    height: 40
+                                    font.pointSize: 9
+                                    wrapMode: Text.WordWrap
+                                    text: title
+                                }
+
+                                Label {
+                                    text: user ? "Owner: " + user.getUsernameById(owner_id) : ""
+                                }
+
+                                Label {
+                                    property var priorityLabel: label ? label.getLabelById(id, Label.Priority) : {}
+                                    text: "Priority: " + priorityLabel.name
+                                    color: priorityLabel.color ? priorityLabel.color : "black"
+                                }
+                                Label {
+                                    property var typeLabel: label ? label.getLabelById(id, Label.Type) : {}
+                                    text: "Type: " + typeLabel.name
+                                    color: typeLabel.color ? typeLabel.color : "black"
+                                }
+                                Label {
+                                    text: "Estimated time: " + estimated_time + "h"
+                                }
+                                Label {
+                                    text: "Spent time: " + spent_time + "h"
+                                }
+
+                                Text {
+                                    font.pointSize: 6
+                                    text: "#" + id
+                                }
                             }
                         }
 
@@ -116,29 +158,17 @@ Column {
                             drag.target: taskDraggable
 
                             onPressed: {
-                                scroll.clip = false
+                                taskContent.border.color = "darkblue"
                                 taskDraggable.beginDrag = Qt.point(taskDraggable.x, taskDraggable.y);
                             }
 
                             onReleased: {
-                                scroll.clip = true
+                                taskContent.border.color = "grey"
                                 if(taskDraggable.caught) {
-//                                    backAnimX.from = taskDraggable.x;
-//                                    backAnimX.to = beginDrag.x;
-//                                    backAnimY.from = taskDraggable.y;
-//                                    backAnimY.to = beginDrag.y;
-//                                    backAnim.start()
-
                                      taskDraggable.Drag.drop()
                                 }
                             }
                         }
-
-//                        ParallelAnimation {
-//                           id: backAnim
-//                           SpringAnimation { id: backAnimX; target: taskDraggable; property: "x"; duration: 250; spring: 1; damping: 0.1 }
-//                           SpringAnimation { id: backAnimY; target: taskDraggable; property: "y"; duration: 250; spring: 1; damping: 0.1 }
-//                        }
 
                         states: State {
                             when: dragArea.drag.active

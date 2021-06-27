@@ -55,6 +55,7 @@ int main(int argc, char *argv[])
     engine.rootContext()->setContextProperty("label", &label);
 
     Status::declareQML();
+    Label::declareQML();
 
     return app.exec();
 }

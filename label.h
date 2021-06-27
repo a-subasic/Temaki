@@ -1,3 +1,36 @@
+//#ifndef LABEL_H
+//#define LABEL_H
+
+//#include <QObject>
+//#include <QSqlQuery>
+//#include <QSqlError>
+//#include <QQmlEngine>
+
+//class Label : public QObject
+//{
+//     Q_OBJECT
+
+//public:
+//    explicit Label(QObject *parent = nullptr);
+
+//    enum LabelType
+//    {
+//        PRIORITY = 1,
+//        TYPE = 2,
+//    };
+//    Q_ENUMS(LabelType)
+
+//    static void declareQML() {
+//        qmlRegisterType<Label>("MyQMLEnums", 13, 37, "Label");
+//    }
+
+
+//public slots:
+//    QString getNameById(int& taskId, int& typeId);
+//};
+
+//#endif // LABEL_H
+
 #ifndef LABEL_H
 #define LABEL_H
 
@@ -5,6 +38,7 @@
 #include <QDebug>
 #include <QSqlQuery>
 #include <QSqlError>
+#include <QQmlEngine>
 
 class Label : public QObject
 {
@@ -14,10 +48,14 @@ class Label : public QObject
 public:
     explicit Label(QObject *parent = nullptr);
     enum LabelType {
-      Priority = 1,
-      Type = 2
+        Priority = 1,
+        Type = 2
     };
     Q_ENUM(LabelType)
+
+    static void declareQML() {
+        qmlRegisterType<Label>("MyQMLEnums", 13, 37, "Label");
+    }
 
     QVariant project_labels() const {
         return m_project_labels;
@@ -36,6 +74,7 @@ private:
 
 public slots:
     QVariant getProjectLabels(int projectId); /* get all labels from project_id */
+    QVariant getLabelById(int taskId, int typeId);
 };
 
 #endif // LABEL_H

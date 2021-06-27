@@ -150,7 +150,7 @@ QList<QVariant> User::getProjectMembers(int projectId) {
         result.append(QVariant::fromValue(map));
     }
     m_project_members = result;
-    projectMembersChanged();
+    emit projectMembersChanged();
     return result;
 }
 
@@ -163,7 +163,7 @@ bool User::removeProjectMember(int projectId, int userId) {
     bool success = query.exec();
 
     m_project_members = getProjectMembers(projectId);
-    projectMembersChanged();
+    emit projectMembersChanged();
     return success;
 }
 
@@ -189,7 +189,22 @@ bool User::addProjectMembers(int projectId, const QStringList& memberIds){
     QSqlDatabase::database().commit();
 
     m_project_members = getProjectMembers(projectId);
-    projectMembersChanged();
+    emit projectMembersChanged();
 
     return success;
+}
+
+QString User::getUsernameById(int id) {
+    QSqlQuery query;
+    query.prepare("SELECT username FROM User WHERE id = :id");
+    query.bindValue(":id", id);
+    query.exec();
+
+    QString username = "Not assigned";
+
+    while (query.next()) {
+        username = query.value(0).toString();
+    }
+
+    return username;
 }
