@@ -17,7 +17,6 @@
         <file>Analytics.qml</file>
         <file>Labels.qml</file>
         <file>Members.qml</file>
-        <file>TasksColumn.qml</file>
     </qresource>
     <qresource prefix="/layouts">
         <file>Body.qml</file>
