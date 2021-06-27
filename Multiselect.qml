@@ -8,6 +8,7 @@ ComboBox {
     property var maxHeight: 250
     property var items: []
 
+    signal checked;
     displayText: title
 
     model: ListModel {
@@ -73,7 +74,10 @@ ComboBox {
             text: model.name
             highlighted: comboBox.highlightedIndex == index
             checked: model.selected
-            onCheckedChanged: model.selected = checked
+            onCheckedChanged: {
+                model.selected = checked
+                comboBox.checked()
+            }
         }
     }
 

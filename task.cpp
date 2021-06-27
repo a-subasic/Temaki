@@ -10,19 +10,42 @@ Task::Task(QObject *parent) : QObject(parent)
 
 QList<QVariant> Task::getForProjectByStatus(const int& projectId) {
     QList<QVariant> result;
+    bool success = false;
 
     QSqlQuery query;
-    query.prepare("SELECT * FROM Task WHERE project_id = :projectId");
-    query.bindValue(":projectId", projectId);
-    query.exec();
+    QString querystring =
+          QString("SELECT Task.id, Task.owner_id, Task.estimated_time, Task.spent_time, Task.status_id, priority, type, priority_id, type_id, priority_color, type_color, Task.title, User.username "
+          "FROM Task "
+          "LEFT JOIN User ON User.id = Task.owner_id "
+          "LEFT JOIN("
+          "(SELECT Label.name as priority, Label.id as priority_id, Label.color as priority_color, Task.id as tid1 FROM Label"
+          "   INNER JOIN TaskLabels on Label.id = TaskLabels.label_id"
+          "   INNER JOIN Task on TaskLabels.task_id = Task.id"
+          "   WHERE Label.label_type_id = 1))"
+          "on (Task.id = tid1)"
+          "LEFT JOIN((SELECT Label.name as type, Label.id as type_id, Label.color as type_color, Task.id as tid2 FROM Label"
+          "   INNER JOIN TaskLabels on Label.id = TaskLabels.label_id"
+          "   INNER JOIN Task on TaskLabels.task_id = Task.id"
+          "   WHERE Label.label_type_id = 2)"
+          ") on (Task.id = tid2)"
+          "WHERE Task.project_id = %1").arg(projectId);
+
+    success = query.exec(querystring);
 
     while (query.next()) {
         int id = query.value(0).toInt();
         int owner_id = query.value(1).toInt();
         int estimated_time = query.value(2).toInt();
         int spent_time = query.value(3).toInt();
-        int status_id = query.value(5).toInt();
-        QString title = query.value(6).toString();
+        int status_id = query.value(4).toInt();
+        QString label_priority = query.value(5).toString();
+        QString label_type = query.value(6).toString();
+        int label_priority_id = query.value(7).toInt();
+        int label_type_id = query.value(8).toInt();
+        QString label_priority_color = query.value(9).toString();
+        QString label_type_color = query.value(10).toString();
+        QString title = query.value(11).toString();
+        QString owner = query.value(12).toString();
 
         QVariantMap map;
         map.insert("id", id);
@@ -30,11 +53,19 @@ QList<QVariant> Task::getForProjectByStatus(const int& projectId) {
         map.insert("estimated_time", estimated_time);
         map.insert("spent_time", spent_time);
         map.insert("status_id", status_id);
+        map.insert("label_priority", label_priority);
+        map.insert("label_type", label_type);
+        map.insert("label_priority_id", label_priority_id);
+        map.insert("label_type_id", label_type_id);
+        map.insert("label_priority_color", label_priority_color);
+        map.insert("label_type_color", label_type_color);
         map.insert("title", title);
-
+        map.insert("owner", owner);
 
         result.append(QVariant::fromValue(map));
     }
+
+    if (!success) qWarning() << QString("Failed to execute 'Task.getForProjectByStatus' query. ERROR: %3").arg(query.lastError().text());
     m_project_tasks = result;
     emit projectTasksChanged();
 

@@ -46,7 +46,7 @@ QVariant Label::getProjectLabels(int projectId) {
 
     QSqlQuery query;
     query.prepare("SELECT Label.id, Label.name, Label.label_type_id, Label.color FROM Label "
-                  "INNER JOIN LabelType ON Label.label_type_id = LabelType.id WHERE Label.id IN "
+                  "WHERE Label.id IN "
                   "(SELECT label_id FROM TaskLabels WHERE task_id IN "
                   "(SELECT Task.id FROM Task WHERE project_id = :projectId))");
     query.bindValue(":projectId", projectId);

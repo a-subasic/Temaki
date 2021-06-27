@@ -9,7 +9,6 @@ import "qrc:/const.js" as Constants
 import "qrc:/components"
 import "qrc:/pages/components"
 import "qrc:/editors" as Editors
-import "qrc:/pages/components"
 
 Page {
     title: "Board"
@@ -25,11 +24,14 @@ Page {
     property var labelPriorities: [] = []
     property var labelTypes: [] = []
 
+    property var memberFilter: [] = []
+    property var labelPriorityFilter: [] = []
+    property var labelTypeFilter: [] = []
+
     signal multiselectChange;
+    signal initFilters;
 
     Component.onCompleted: {
-        console.log("current project id", project.id)
-
         if(project.id !== -1) {
             initBoard()
         }
@@ -53,16 +55,29 @@ Page {
 
     /* Reloads tasks into board */
     function initTasks() {
+        initFilters()
+
         var t = task.project_tasks
         tasksModel.clear()
         for(var i in t) {
+            if (!memberFilter.includes(t[i].owner) && memberFilter.length != 0) continue
+            if (!labelPriorityFilter.includes(t[i].label_priority) && labelPriorityFilter.length != 0) continue
+            if (!labelTypeFilter.includes(t[i].label_type) && labelTypeFilter.length != 0) continue
+
             tasksModel.append({
                 "id": t[i].id,
                 "owner_id": t[i].owner_id,
                 "estimated_time": t[i].estimated_time,
                 "spent_time": t[i].spent_time,
                 "status_id": t[i].status_id,
+                "label_priority": t[i].label_priority,
+                "label_type": t[i].label_type,
+                "label_priority_id": t[i].label_priority_id,
+                "label_type_id": t[i].label_type_id,
+                "label_priority_color": t[i].label_priority_color,
+                "label_type_color": t[i].label_type_color,
                 "title": t[i].title,
+                "owner": t[i].owner,
             })
         }
     }
@@ -78,6 +93,13 @@ Page {
         target: task
         function onProjectTasksChanged() {
             initTasks()
+        }
+    }
+
+    Connections {
+        target: label
+        function onProjectLabelsChanged() {
+            initBoard()
         }
     }
 
@@ -129,6 +151,15 @@ Page {
                     }
                 }
 
+                Connections {
+                    target: board
+                    function onInitFilters() {
+                        memberFilter = membersMultiselect.getSelectedItems().map(function(obj) { if (obj.selected )return obj.name})
+                        labelPriorityFilter = priorityMultiselect.getSelectedItems().map(function(obj) { if (obj.selected )return obj.name})
+                        labelTypeFilter = typeMultiselect.getSelectedItems().map(function(obj) { if (obj.selected )return obj.name})
+                    }
+                }
+
                 Row {
                     spacing: 5
 
@@ -136,19 +167,21 @@ Page {
                         id: membersMultiselect
                         title: "Members"
                         items: board.memberUsernames
-
+                        onChecked: initTasks()
                     }
 
                     Multiselect {
                         id: priorityMultiselect
                         title: "Priority"
                         items: board.labelPriorities
+                        onChecked: initTasks()
                     }
 
                     Multiselect {
                         id: typeMultiselect
                         title: "Type"
                         items: board.labelTypes
+                        onChecked: initTasks()
                     }
                 }
 

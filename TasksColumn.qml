@@ -52,7 +52,7 @@ Column {
                 backlogBorder.border.color = "transparent"
                 task.updateTaskStatus(drag.source.task_id, statusId)
                 task.getForProjectByStatus(project.id)
-                initBoard()
+                initTasks()
             }
 
             Rectangle {
@@ -127,25 +127,25 @@ Column {
                                 }
 
                                 Text {
-                                    text: user ? "Owner: " + user.getUsernameById(owner_id) : ""
+                                    text: owner ? "Owner: " + owner : ""
                                 }
 
                                 Text {
-                                    property var priorityLabel: label ? label.getLabelById(id, Label.Priority) : {}
+                                    property var priorityLabel: {"id": label_priority_id, "name": label_priority }
                                     Component.onCompleted: {
-                                        myData["priorityLabelId"] = priorityLabel.id
+                                        myData["priorityLabelId"] = label_priority_id
                                     }
-                                    text: "Priority: " + priorityLabel.name
-                                    color: priorityLabel.color ? priorityLabel.color : "black"
+                                    text: "Priority: " + label_priority
+                                    color: label_priority_color ? label_priority_color : "black"
                                 }
 
                                 Text {
-                                    property var typeLabel: label ? label.getLabelById(id, Label.Type) : {}
+                                    property var typeLabel: {"id": label_type_id, "name": label_type }
                                     Component.onCompleted: {
-                                        myData["typeLabelId"] = typeLabel.id
+                                        myData["typeLabelId"] = label_type_id
                                     }
-                                    text: "Type: " + typeLabel.name
-                                    color: typeLabel.color ? typeLabel.color : "black"
+                                    text: "Type: " + label_type
+                                    color: label_type_color ? label_type_color : "black"
                                 }
 
                                 Text {
