@@ -133,14 +133,17 @@ Column {
                                     text: "Priority: " + priorityLabel.name
                                     color: priorityLabel.color ? priorityLabel.color : "black"
                                 }
+
                                 Label {
                                     property var typeLabel: label ? label.getLabelById(id, Label.Type) : {}
                                     text: "Type: " + typeLabel.name
                                     color: typeLabel.color ? typeLabel.color : "black"
                                 }
+
                                 Label {
                                     text: "Estimated time: " + estimated_time + "h"
                                 }
+
                                 Label {
                                     text: "Spent time: " + spent_time + "h"
                                 }
