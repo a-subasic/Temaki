@@ -1,29 +1,3 @@
-//#include "label.h"
-//#include <QSqlRecord>
-//#include <QMetaEnum>
-
-//Label::Label(QObject *parent) : QObject(parent)
-//{
-
-//}
-
-//QString Label::getNameById(int& taskId, int& typeId) {
-//    QSqlQuery query;
-//    query.prepare("SELECT name FROM Label WHERE label_type_id = :typeId AND id IN (SELECT label_id FROM TaskLabels WHERE task_id = :taskId)");
-//    query.bindValue(":taskId", taskId);
-//    query.bindValue(":typeId", typeId);
-//    query.exec();
-
-//    QString name = "Not selected";
-
-//    while (query.next()) {
-//        name = query.value(0).toString();
-//    }
-
-//    return name;
-//}
-
-
 #include "label.h"
 #include <QSqlRecord>
 #include <QMetaEnum>
@@ -118,8 +92,6 @@ QVariant Label::getLabelById(int taskId, int typeId) {
         name = query.value(0).toString();
         color = query.value(1).toString();
     }
-
-    qInfo() << color;
 
     QVariantMap mapResult;
     mapResult.insert("name", name);
