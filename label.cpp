@@ -13,8 +13,6 @@ QList<QVariant> Label::getLabels() {
     query.prepare("SELECT id, name, label_type_id, color FROM Label");
     query.exec();
 
-    //SELECT Label.id, Label.name, LabelType.name, Label.color FROM Label INNER JOIN LabelType ON Label.label_type_id = LabelType.id WHERE Label.id IN (SELECT label_id FROM TaskLabels WHERE task_id IN (SELECT Task.id FROM Task WHERE project_id = 5))
-
     while (query.next()){
         QString id = query.value(0).toString();
         QString name = query.value(1).toString();
@@ -33,8 +31,13 @@ QList<QVariant> Label::getLabels() {
 
         result.append(map);
     }
+
+    m_all_labels = result;
+    emit labelsChanged();
+
     return result;
 }
+
 
 QVariant Label::getProjectLabels(int projectId) {
     QVariant result;
@@ -102,6 +105,91 @@ QVariant Label::getLabelById(int taskId, int typeId) {
 
     return result;
 }
+
+bool Label::removeLabel(int projectId, int labelId) {
+    QSqlQuery query;
+
+    // Prepare for transaction
+    QSqlDatabase::database().transaction();
+
+    query.prepare("DELETE FROM Label WHERE id = :labelId");
+    query.bindValue(":labelId", labelId);
+    bool success = query.exec();
+
+    if(!success) {
+        qWarning() << QString("Rollback transaction!");
+        qWarning() << QString("ERROR: %3").arg(query.lastError().text());
+        QSqlDatabase::database().rollback(); // rollback if failed to remove from Label
+        return success;
+    }
+
+    QSqlQuery taskQuery;
+    taskQuery.prepare("DELETE FROM TaskLabels WHERE label_id = :labelId");
+    taskQuery.bindValue(":labelId", labelId);
+    success = taskQuery.exec();
+
+    if(!success) {
+        qWarning() << QString("Rollback transaction!");
+        qWarning() << QString("ERROR: %3").arg(taskQuery.lastError().text());
+        QSqlDatabase::database().rollback(); // rollback if failed to remove from TaskLabels
+        return success;
+    }
+
+    if (success) QSqlDatabase::database().commit();
+
+    getLabels();
+    getProjectLabels(projectId);
+
+    return success;
+}
+
+QList<QVariant> Label::getLabelTypesEnum() {
+    QList<QVariant> result;
+
+    QSqlQuery query;
+    query.prepare("SELECT id, name FROM LabelType");
+    query.exec();
+
+    while (query.next()) {
+        QVariantMap mapResult;
+        mapResult.insert("id", query.value(0).toString());
+        mapResult.insert("name", query.value(1).toString());
+
+        result.append(QVariant::fromValue(mapResult));
+    }
+
+    getLabels();
+    return result;
+}
+
+QVariant Label::create(const QString& name, const int& labelTypeId, const QString& color) {
+    bool success = false;
+    int label_id = 0;
+
+    QSqlQuery query;
+    query.prepare("INSERT INTO Label (name, label_type_id, color) VALUES (:name, :label_type_id, :color)");
+    query.bindValue(":name", name);
+    query.bindValue(":label_type_id", labelTypeId);
+    query.bindValue(":color", color);
+
+    if(!query.exec()) {
+        success = false;
+        qWarning() << "Failed to execute create label query";
+    }
+    else {
+        success = true;
+        label_id = query.lastInsertId().toInt();
+    }
+
+    QVariantMap response;
+    response.insert("success", success);
+    response.insert("user_id", label_id);
+
+    getLabels();
+
+    return QVariant::fromValue(response);
+}
+
 
 
 

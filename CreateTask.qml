@@ -69,6 +69,7 @@ Component {
             var ownerId = membersCombobox.isSelected ? membersCombobox.model.get(membersCombobox.currentIndex).id : null
 
             var success = task.create(taskTitleText.input.text, project.id, estimatedTimeText.value, labelTypeId, labelPriorityId, ownerId);
+            label.getProjectLabels(project.id);
 
             /* If Creation failed, show message */
             if(!success) {
@@ -76,8 +77,6 @@ Component {
                 createTaskDialog.open()
                 failedDialog.open()
                 return
-            } else {
-                //sidebar.reloadProjects()
             }
         }
 

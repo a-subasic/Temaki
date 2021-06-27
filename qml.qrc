@@ -27,6 +27,7 @@
         <file>CreateProject.qml</file>
         <file>AddMembers.qml</file>
         <file>CreateTask.qml</file>
+        <file>CreateLabel.qml</file>
     </qresource>
     <qresource prefix="/components">
         <file>Input.qml</file>
@@ -34,6 +35,7 @@
         <file>Multiselect.qml</file>
         <file>SearchBox.qml</file>
         <file>ConfirmationDialog.qml</file>
+        <file>ColorPicker.qml</file>
     </qresource>
     <qresource prefix="/pages/components">
         <file>TasksColumn.qml</file>
