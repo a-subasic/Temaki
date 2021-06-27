@@ -1,36 +1,3 @@
-//#ifndef LABEL_H
-//#define LABEL_H
-
-//#include <QObject>
-//#include <QSqlQuery>
-//#include <QSqlError>
-//#include <QQmlEngine>
-
-//class Label : public QObject
-//{
-//     Q_OBJECT
-
-//public:
-//    explicit Label(QObject *parent = nullptr);
-
-//    enum LabelType
-//    {
-//        PRIORITY = 1,
-//        TYPE = 2,
-//    };
-//    Q_ENUMS(LabelType)
-
-//    static void declareQML() {
-//        qmlRegisterType<Label>("MyQMLEnums", 13, 37, "Label");
-//    }
-
-
-//public slots:
-//    QString getNameById(int& taskId, int& typeId);
-//};
-
-//#endif // LABEL_H
-
 #ifndef LABEL_H
 #define LABEL_H
 

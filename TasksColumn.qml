@@ -5,6 +5,7 @@ import QtQuick.Controls 2.13
 import QtQuick.Layouts 1.3
 
 import "qrc:/const.js" as Constants
+import "qrc:/editors" as Editors
 
 Column {
     property string statusLabel
@@ -81,11 +82,12 @@ Column {
                     model: tasksModel
                     delegate: Item {
                         property string task_id: id
+                        property var myData: model
 
                         id: taskDraggable
 
                         width: tasksContainer.width
-                        height: status_id == statusId ? 165 : 0
+                        height: status_id == statusId ? 210 : 0
                         visible: status_id == statusId
 
                         property point beginDrag
@@ -104,7 +106,7 @@ Column {
                             id: taskContent
                             radius: 10
                             width: parent.width
-                            height: 160
+                            height: 205
                             color: "lightblue"
                             border.color: "darkgrey"
                             border.width: 1
@@ -113,7 +115,7 @@ Column {
                             Column {
                                 anchors.fill: parent
                                 anchors.margins: 5
-                                spacing: 2
+                                spacing: 5
 
                                 Text {
                                     verticalAlignment: Text.AlignVCenter
@@ -124,28 +126,50 @@ Column {
                                     text: title
                                 }
 
-                                Label {
+                                Text {
                                     text: user ? "Owner: " + user.getUsernameById(owner_id) : ""
                                 }
 
-                                Label {
+                                Text {
                                     property var priorityLabel: label ? label.getLabelById(id, Label.Priority) : {}
+                                    Component.onCompleted: {
+                                        myData["priorityLabelId"] = priorityLabel.id
+                                    }
                                     text: "Priority: " + priorityLabel.name
                                     color: priorityLabel.color ? priorityLabel.color : "black"
                                 }
 
-                                Label {
+                                Text {
                                     property var typeLabel: label ? label.getLabelById(id, Label.Type) : {}
+                                    Component.onCompleted: {
+                                        myData["typeLabelId"] = typeLabel.id
+                                    }
                                     text: "Type: " + typeLabel.name
                                     color: typeLabel.color ? typeLabel.color : "black"
                                 }
 
-                                Label {
+                                Text {
                                     text: "Estimated time: " + estimated_time + "h"
                                 }
 
-                                Label {
+                                Text {
                                     text: "Spent time: " + spent_time + "h"
+                                }
+
+                                Button {
+                                    text: "Edit"
+                                    height: 20
+                                     Layout.alignment: Qt.AlignHCenter
+
+                                    onClicked: {
+                                        var d = editTaskComponent.createObject(homeScreen, { "parent" : homeScreen, "currentTask": myData });
+                                        d.open()
+                                    }
+                                }
+
+                                /* Edit Task Dialog */
+                                Editors.EditTask {
+                                    id: editTaskComponent
                                 }
 
                                 Text {

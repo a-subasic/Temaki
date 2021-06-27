@@ -4,7 +4,7 @@ import QtQuick.Layouts 1.13
 
 Dialog {
     property string dialogTitle: "Title"
-    property string description: "Description"
+    property string description: ""
 
     title: dialogTitle
     standardButtons: Dialog.Ok
