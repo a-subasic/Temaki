@@ -5,6 +5,7 @@
 #include <QDebug>
 #include <QSqlQuery>
 #include <QSqlError>
+#include <project.h>
 
 class Task : public QObject
 {

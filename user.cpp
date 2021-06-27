@@ -154,16 +154,40 @@ QList<QVariant> User::getProjectMembers(int projectId) {
     return result;
 }
 
-/* TODO: discuss: what happens if we delete all project members? */
 bool User::removeProjectMember(int projectId, int userId) {
     QSqlQuery query;
+
+    // Prepare for transaction
+    QSqlDatabase::database().transaction();
+
     query.prepare("DELETE FROM ProjectMembers WHERE project_id = :projectId AND user_id = :userId");
     query.bindValue(":projectId", projectId);
     query.bindValue(":userId", userId);
     bool success = query.exec();
 
-    m_project_members = getProjectMembers(projectId);
-    emit projectMembersChanged();
+    if(!success) {
+        qWarning() << QString("Rollback transaction!");
+        qWarning() << QString("ERROR: %3").arg(query.lastError().text());
+        QSqlDatabase::database().rollback(); // rollback if failed to remove ProjectMember
+        return success;
+    }
+
+    QSqlQuery taskQuery;
+    taskQuery.prepare("UPDATE Task SET owner_id=NULL WHERE project_id = :project_id AND owner_id = :owner_id");
+    taskQuery.bindValue(":project_id", projectId);
+    taskQuery.bindValue(":owner_id", userId);
+    success = taskQuery.exec();
+
+    if(!success) {
+        qWarning() << QString("Rollback transaction!");
+        qWarning() << QString("ERROR: %3").arg(taskQuery.lastError().text());
+        QSqlDatabase::database().rollback(); // rollback if failed to update Tasks
+        return success;
+    }
+
+    if (success) QSqlDatabase::database().commit();
+
+    getProjectMembers(projectId);
     return success;
 }
 
@@ -188,9 +212,9 @@ bool User::addProjectMembers(int projectId, const QStringList& memberIds){
     }
     QSqlDatabase::database().commit();
 
-    m_project_members = getProjectMembers(projectId);
-    emit projectMembersChanged();
+    getProjectMembers(projectId);
 
+    emit projectMembersChanged();
     return success;
 }
 

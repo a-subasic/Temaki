@@ -213,7 +213,9 @@ Page {
                     Layout.alignment: Qt.AlignLeft
                     width: parent.width * 0.25
                     Layout.fillHeight: true
+                    Component.onCompleted: { if(user.id == model.id) removeBtn.visible = false }
                     Button {
+                        id: removeBtn
                         height: parent.height
                         text: "Remove"
                         onClicked: {
@@ -222,6 +224,7 @@ Page {
 
                             confirmDialog.accepted.connect(function(){
                                 user.removeProjectMember(project.id, model.id)
+                                task.getForProjectByStatus(project.id)
                             })
 
                             confirmDialog.rejected.connect(function(){
