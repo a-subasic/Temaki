@@ -7,6 +7,7 @@ Item {
     property bool isValid: !isEmpty && customErrorText.length === 0
 
     property string labelName: ""
+    property string inputText: ""
     property string validatorRegex: "[a-zA-Z0-9]+"
     property string errorText: ""
     property string customErrorText: ""
@@ -27,6 +28,7 @@ Item {
 
         TextField {
             id: textField
+            text: inputText
             width: parent.width
             placeholderText: qsTr("")
             validator: RegExpValidator {

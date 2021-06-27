@@ -15,7 +15,7 @@ Component {
         visible:false
         title: qsTr('Create Task - wip')
         width: 400
-        height: 450
+        height: 400
         standardButtons: Dialog.Discard | Dialog.Save
         anchors.centerIn: parent
 

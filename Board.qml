@@ -9,6 +9,7 @@ import "qrc:/const.js" as Constants
 import "qrc:/components"
 import "qrc:/pages/components"
 import "qrc:/editors" as Editors
+import "qrc:/pages/components"
 
 Page {
     title: "Board"

@@ -84,20 +84,23 @@ QVariant Label::getLabelById(int taskId, int typeId) {
     QVariant result;
 
     QSqlQuery query;
-    query.prepare("SELECT name, color FROM Label WHERE label_type_id = :typeId AND id IN (SELECT label_id FROM TaskLabels WHERE task_id = :taskId)");
+    query.prepare("SELECT id, name, color FROM Label WHERE label_type_id = :typeId AND id IN (SELECT label_id FROM TaskLabels WHERE task_id = :taskId)");
     query.bindValue(":taskId", taskId);
     query.bindValue(":typeId", typeId);
     query.exec();
 
+    int id = 0;
     QString name = "Not selected";
     QString color = "";
 
     while (query.next()) {
-        name = query.value(0).toString();
-        color = query.value(1).toString();
+        id = query.value(0).toInt();
+        name = query.value(1).toString();
+        color = query.value(2).toString();
     }
 
     QVariantMap mapResult;
+    mapResult.insert("id", id);
     mapResult.insert("name", name);
     mapResult.insert("color", color);
 
