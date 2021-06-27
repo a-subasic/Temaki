@@ -30,8 +30,6 @@ QList<QVariant> Task::getForProjectByStatus(const int& projectId) {
           ") on (Task.id = tid2)"
           "WHERE Task.project_id = %3").arg(Label::LabelType::Priority).arg(Label::LabelType::Type).arg(projectId);
 
-    qWarning() << querystring;
-
     success = query.exec(querystring);
 
     while (query.next()) {
