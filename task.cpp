@@ -244,8 +244,6 @@ QList<QVariant> Task::import(const QString& fileName) {
 
             QJsonObject obj = doc.object();
 
-            qInfo() << obj;
-
             QVariantMap map;
             map.insert("estimated_time", obj["estimated_time"].toString());
             map.insert("label_priority", obj["label_priority"].toString());

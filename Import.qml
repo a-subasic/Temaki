@@ -14,20 +14,28 @@ Page {
     height: parent.height
     visible: false
 
-    Editors.TasksTable {
-        id: tasksTable
+    Column {
         width: parent.width
         height: parent.height
-        tasks: tasksToImport
-    }
 
-    Button {
-        text: "Import"
-        onClicked: {
-            var importTasks= tasksTable.getSelectedTasks();
+        Editors.TasksTable {
+            id: tasksTable
+            width: parent.width
+            height: parent.height - 65
+            tasks: tasksToImport
+        }
 
-            importTasks.forEach(t => {
-                   task.create(
+        Button {
+            anchors.rightMargin: 25
+//            anchors.top: tasksTable.bottom
+            anchors.right: parent.right
+            Layout.alignment: Qt.AlignRight
+            text: "Import"
+            onClicked: {
+                var importTasks= tasksTable.getSelectedTasks();
+
+                importTasks.forEach(t => {
+                    task.create(
                         t.title,
                         project.id,
                         t.estimated_time,
@@ -36,10 +44,10 @@ Page {
                         label.labelExists(t.label_type),
                         label.labelExists(t.label_priority),
                         user.usernameExists(t.owner))
-               }
-            )
+                    }
+                )
+            }
         }
     }
-
 }
 
