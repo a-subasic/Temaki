@@ -2,6 +2,8 @@ import QtQuick 2.3
 import QtQuick.Controls 2.15
 import QtQuick.Layouts 1.3
 import QtQml.Models 2.1
+import QtQuick.Dialogs 1.0
+
 import "qrc:/editors" as Editors
 import "qrc:/pages/" as Pages
 
@@ -102,9 +104,25 @@ Drawer {
         anchors.horizontalCenter: sidebarDrawer.horizontalCenter
         width: parent.width
 
+        FileDialog {
+            id: fileDialog
+            title: "Please choose a file"
+            folder: shortcuts.desktop
+            onAccepted: {
+                var path = fileDialog.fileUrl.toString();
+                path = path.replace(/^(file:\/{3})/,"");
+                var cleanPath = decodeURIComponent(path);
+
+                var tasks = task.import(cleanPath);
+                bodyStackView.push("qrc:/pages/Import.qml", {tasks: tasks})
+                sidebarDrawer.close()
+            }
+        }
+
         Button {
             text: "Import"
             width: parent.width/2
+            onClicked: fileDialog.open();
         }
         Button {
             text: "Export"

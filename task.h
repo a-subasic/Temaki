@@ -39,8 +39,9 @@ private:
 public slots:
     QList<QVariant> getForProjectByStatus(const int& projectId);
     void updateTaskStatus(const int& taskId, const int& statusId);
-    QVariant create(const QString& title, const int& project_id, const int& estimatedTime, const int& labelTypeId = NULL, const int& labelPriorityId = NULL, const int& ownerId = NULL);
-    bool update(const int& project_id, const int& taskId, const QString& title, const int& estimatedTime, const int& spentTime, const int& labelTypeId = NULL, const int& labelPriorityId = NULL, const int& ownerId = NULL);
+    QVariant create(const QString& title, const int& project_id, const int& estimatedTime, const int& labelTypeId = 0, const int& labelPriorityId = 0, const int& ownerId = 0);
+    bool update(const int& project_id, const int& taskId, const QString& title, const int& estimatedTime, const int& spentTime, const int& labelTypeId = 0, const int& labelPriorityId = 0, const int& ownerId = 0);
+    QList<QVariant> import(const QString& fileName);
 };
 
 #endif // TASK_H
