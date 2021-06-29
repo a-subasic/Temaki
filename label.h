@@ -62,6 +62,7 @@ public slots:
     QList<QVariant> getLabelTypesEnum();
     bool removeLabel(int projectId, int labelId);
     QVariant create(const QString& name, const int& labelTypeId, const QString& color);
+    int labelExists(const QString& labelName);
 };
 
 #endif // LABEL_H

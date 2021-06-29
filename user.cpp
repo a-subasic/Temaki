@@ -232,3 +232,18 @@ QString User::getUsernameById(int id) {
 
     return username;
 }
+
+int User::usernameExists(const QString& username) {
+    int id = 0;
+
+    QSqlQuery query;
+    query.prepare("SELECT id FROM User WHERE username = :username");
+    query.bindValue(":username", username);
+    query.exec();
+
+    while (query.next()) {
+        id = query.value(0).toInt();
+    }
+
+    return id;
+}

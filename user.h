@@ -81,6 +81,7 @@ public slots:
     bool removeProjectMember(int projectId, int userId);
     bool addProjectMembers(int projectId, const QStringList& userIds);
     QString getUsernameById(int id);
+    int usernameExists(const QString& username);
 };
 
 #endif // USER_H
