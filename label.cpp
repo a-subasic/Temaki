@@ -193,6 +193,21 @@ QVariant Label::create(const QString& name, const int& labelTypeId, const QStrin
     return QVariant::fromValue(response);
 }
 
+int Label::labelExists(const QString& labelName) {
+    int id = 0;
+
+    QSqlQuery query;
+    query.prepare("SELECT id FROM Label WHERE name = :labelName");
+    query.bindValue(":labelName", labelName);
+    query.exec();
+
+    while (query.next()) {
+        id = query.value(0).toInt();
+    }
+
+    return id;
+}
+
 
 
 

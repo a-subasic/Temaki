@@ -114,8 +114,10 @@ Drawer {
                 var cleanPath = decodeURIComponent(path);
 
                 var tasks = task.import(cleanPath);
-                bodyStackView.push("qrc:/pages/Import.qml", {tasks: tasks})
-                sidebarDrawer.close()
+                if(project.id != -1) {
+                    bodyStackView.push("qrc:/pages/Import.qml", {tasksToImport: tasks})
+                    sidebarDrawer.close()
+                }
             }
         }
 

@@ -127,7 +127,7 @@ Column {
                                 }
 
                                 Text {
-                                    text: owner ? "Owner: " + owner : ""
+                                    text: owner ? "Owner: " + owner : "Owner: Not assigned"
                                 }
 
                                 Text {
@@ -135,7 +135,7 @@ Column {
                                     Component.onCompleted: {
                                         myData["priorityLabelId"] = label_priority_id
                                     }
-                                    text: "Priority: " + label_priority
+                                    text: label_priority ? "Priority: " + label_priority : "Priority: Not selected"
                                     color: label_priority_color ? label_priority_color : "black"
                                 }
 
@@ -144,7 +144,7 @@ Column {
                                     Component.onCompleted: {
                                         myData["typeLabelId"] = label_type_id
                                     }
-                                    text: "Type: " + label_type
+                                    text: label_type ? "Type: " + label_type : "Type: Not selected"
                                     color: label_type_color ? label_type_color : "black"
                                 }
 

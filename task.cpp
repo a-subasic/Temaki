@@ -90,7 +90,7 @@ void Task::updateTaskStatus(const int& taskId, const int& statusId) {
 }
 
 // if ownerId is NULL, 0 is entered in db. (valid Ids start from 1)
-QVariant Task::create(const QString& title, const int& project_id, const int& estimatedTime, const int& labelTypeId, const int& labelPriorityId, const int& ownerId) {
+QVariant Task::create(const QString& title, const int& project_id, const int& estimatedTime, const int& spentTime, const int& statusId, const int& labelTypeId, const int& labelPriorityId, const int& ownerId) {
     bool success = false;
     int task_id = 0;
 
@@ -103,9 +103,9 @@ QVariant Task::create(const QString& title, const int& project_id, const int& es
 
     taskQuery.bindValue(":owner_id", ownerId);
     taskQuery.bindValue(":estimated_time", estimatedTime);
-    taskQuery.bindValue(":spent_time", 0);
+    taskQuery.bindValue(":spent_time", spentTime);
     taskQuery.bindValue(":project_id", project_id);
-    taskQuery.bindValue(":status_id", TaskStatus::Backlog);
+    taskQuery.bindValue(":status_id", statusId);
     taskQuery.bindValue(":title", title);
 
     success = taskQuery.exec();
@@ -265,8 +265,6 @@ QList<QVariant> Task::import(const QString& fileName) {
             taskToImport += line;
         }
 
-
-
     } while (!line.isNull());
 
 
@@ -312,4 +310,20 @@ bool Task::exportToFile(const QList<QVariantMap> tasks, const QString projectNam
     qWarning() << exportString;
     return success;
 }
+
+int Task::statusExists(const QString& name) {
+    int id = TaskStatus::Backlog;
+
+    QSqlQuery query;
+    query.prepare("SELECT id FROM Status WHERE name = :name");
+    query.bindValue(":name", name);
+    query.exec();
+
+    while (query.next()) {
+        id = query.value(0).toInt();
+    }
+
+    return id;
+}
+
 
