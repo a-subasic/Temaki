@@ -3,6 +3,11 @@
 #include <QSqlRecord>
 #include <QMetaEnum>
 
+#include <QDateTime>
+#include <QJsonObject>
+#include <QJsonDocument>
+#include <QFile>
+
 Task::Task(QObject *parent) : QObject(parent)
 {
 
@@ -198,6 +203,44 @@ bool Task::update(const int& projectId, const int& taskId, const QString& title,
 
     getForProjectByStatus(projectId);
 
+    return success;
+}
+
+bool Task::exportToFile(const QList<QVariantMap> tasks, const QString projectName, const QString filePath) {
+    QDateTime currentDateTime = QDateTime::currentDateTime();
+    QString fileName = projectName + "_" + currentDateTime.toString();
+    QString exportString = "";
+    bool success = false;
+
+    foreach(QVariantMap task, tasks)
+    {
+        TaskExportObj taskExportObj;
+        taskExportObj.title = task.value("title").toString();
+        taskExportObj.estimated_time = task.value("estimated_time").toInt();
+        taskExportObj.label_priority = task.value("label_priority").toString();
+        taskExportObj.label_type = task.value("label_type").toString();
+        taskExportObj.owner = task.value("owner").toString();
+        taskExportObj.spent_time = task.value("spent_time").toInt();
+        taskExportObj.status = task.value("status").toString();
+
+        //QVariantMap test = qvariant_cast<TaskExportObj>(task);
+
+        QVariantMap taskQVariantMap = taskExportObj.TaskExportObj::getVariantMap();
+        QJsonObject taskJsonObject = QJsonObject::fromVariantMap(taskQVariantMap);
+        QString taskString = QJsonDocument(taskJsonObject).toJson(QJsonDocument::Indented).toStdString().c_str();
+
+        QString taskStringFormatted = "@begin-task\n" + taskString + "@end-task";
+        exportString = exportString + "\n" + taskStringFormatted + "\n";
+    }
+
+    QFile file("D:\\Desktop\\skifa\\filename.txt");
+    if ( file.open(QIODevice::ReadWrite) )
+    {
+        QTextStream stream( &file );
+        stream << exportString << Qt::endl;
+    }
+
+    qWarning() << exportString;
     return success;
 }
 
