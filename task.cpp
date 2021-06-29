@@ -2,6 +2,9 @@
 #include "label.h"
 #include <QSqlRecord>
 #include <QMetaEnum>
+#include <QFile>
+#include <QJsonDocument>
+#include <QJsonObject>
 
 #include <QDateTime>
 #include <QJsonObject>
@@ -204,6 +207,72 @@ bool Task::update(const int& projectId, const int& taskId, const QString& title,
     getForProjectByStatus(projectId);
 
     return success;
+}
+
+
+QList<QVariant> Task::import(const QString& fileName) {
+    QList<QVariant> result;
+
+    QFile file(fileName);
+
+    QString beginToken = "@begin-task";
+    QString endToken = "@end-task";
+
+    if(!file.open(QFile::ReadOnly | QFile::Text)) {
+        qInfo() << "file not open";
+    }
+
+    QTextStream in(&file);
+    in.setCodec("UTF-8");
+
+    QString line;
+    bool taskDescriptionActive = false;
+    QString taskToImport = "";
+    do {
+        line = in.readLine();
+        if(!line.length()) continue;
+
+        if(line == beginToken) {
+            taskDescriptionActive = true;
+        }
+
+        else if(line == endToken) {
+            QString str = taskToImport;
+            QByteArray br = str.toUtf8();
+
+            QJsonDocument doc = QJsonDocument::fromJson(br);
+
+            QJsonObject obj = doc.object();
+
+            qInfo() << obj;
+
+            QVariantMap map;
+            map.insert("estimated_time", obj["estimated_time"].toString());
+            map.insert("label_priority", obj["label_priority"].toString());
+            map.insert("label_type", obj["label_type"].toString());
+            map.insert("owner", obj["owner"].toString());
+            map.insert("spent_time", obj["spent_time"].toString());
+            map.insert("status", obj["status"].toString());
+            map.insert("title", obj["title"].toString());
+
+            result.append(QVariant::fromValue(map));
+
+            taskToImport = "";
+            taskDescriptionActive = false;
+        }
+
+        else if(taskDescriptionActive) {
+            taskToImport += line;
+        }
+
+
+
+    } while (!line.isNull());
+
+
+    file.close();
+
+    return result;
 }
 
 bool Task::exportToFile(const QList<QVariantMap> tasks, const QString projectName, const QString filePath) {

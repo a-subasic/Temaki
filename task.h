@@ -68,6 +68,7 @@ public slots:
     void updateTaskStatus(const int& taskId, const int& statusId);
     QVariant create(const QString& title, const int& project_id, const int& estimatedTime, const int& labelTypeId = 0, const int& labelPriorityId = 0, const int& ownerId = 0);
     bool update(const int& project_id, const int& taskId, const QString& title, const int& estimatedTime, const int& spentTime, const int& labelTypeId = 0, const int& labelPriorityId = 0, const int& ownerId = 0);
+    QList<QVariant> import(const QString& fileName);
     bool exportToFile(const QList<QVariantMap> tasks, const QString projectName, const QString filePath);
 };
 

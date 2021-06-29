@@ -17,6 +17,7 @@
         <file>Analytics.qml</file>
         <file>Labels.qml</file>
         <file>Members.qml</file>
+        <file>Import.qml</file>
         <file>Export.qml</file>
     </qresource>
     <qresource prefix="/layouts">
