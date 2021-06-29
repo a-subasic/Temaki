@@ -127,6 +127,10 @@ Drawer {
         Button {
             text: "Export"
             width: parent.width/2
+            onClicked: {
+                bodyStackView.push("qrc:/pages/Export.qml")
+                sidebarDrawer.close()
+            }
         }
     }
 }

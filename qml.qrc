@@ -17,7 +17,11 @@
         <file>Analytics.qml</file>
         <file>Labels.qml</file>
         <file>Members.qml</file>
+<<<<<<< HEAD
         <file>Import.qml</file>
+=======
+        <file>Export.qml</file>
+>>>>>>> main
     </qresource>
     <qresource prefix="/layouts">
         <file>Body.qml</file>
@@ -30,6 +34,7 @@
         <file>CreateTask.qml</file>
         <file>CreateLabel.qml</file>
         <file>EditTask.qml</file>
+        <file>TasksTable.qml</file>
     </qresource>
     <qresource prefix="/components">
         <file>Input.qml</file>
