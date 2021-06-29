@@ -11,13 +11,42 @@ Page {
     id: exportTasksPage
     width: parent.width
     height: parent.height
-    visible:false
 
-    Editors.TasksTable {
-        id: tasksTable
+
+    Column {
         width: parent.width
         height: parent.height
-        tasks: task.project_tasks
+
+        Editors.TasksTable {
+            id: tasksTable
+            width: parent.width
+            height: parent.height - 200
+            tasks: task.project_tasks
+        }
+
+        Button {
+            height: 40
+            width: 60
+            text: "Export to file"
+            onClicked: {
+                fileDialog.open()
+            }
+        }
+    }
+
+    FileDialog {
+        id: fileDialog
+        title: "Please choose file destination"
+        selectFolder: true
+        folder: shortcuts.desktop
+        onAccepted: {
+            var path = fileDialog.fileUrl.toString();
+            path = path.replace(/^(file:\/{3})/,"");
+            var cleanPath = decodeURIComponent(path);
+
+            var tasksToExport = tasksTable.getSelectedTasks().map(function(obj) { if (obj.selected) return obj;})
+            task.exportToFile(tasksToExport, project.name, cleanPath)
+        }
     }
 
 }

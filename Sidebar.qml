@@ -110,8 +110,10 @@ Drawer {
             text: "Export"
             width: parent.width/2
             onClicked: {
-                bodyStackView.push("qrc:/pages/Export.qml")
-                sidebarDrawer.close()
+                if (project.id != -1) {
+                    bodyStackView.push("qrc:/pages/Export.qml")
+                    sidebarDrawer.close()
+                }
             }
         }
     }

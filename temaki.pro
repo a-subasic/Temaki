@@ -1,4 +1,4 @@
-QT += quick sql
+QT += quick sql quickcontrols2
 
 CONFIG += c++11
 
@@ -34,5 +34,5 @@ HEADERS += \
     user.h
 
 DISTFILES += \
+    ../../../../Downloads/json-develop.zip \
     Members.qml
-

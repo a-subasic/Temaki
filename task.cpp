@@ -233,14 +233,13 @@ bool Task::exportToFile(const QList<QVariantMap> tasks, const QString projectNam
         exportString = exportString + "\n" + taskStringFormatted + "\n";
     }
 
-    QFile file("D:\\Desktop\\skifa\\filename.txt");
-    if ( file.open(QIODevice::ReadWrite) )
+    QFile file(filePath + fileName + ".txt");
+    if (file.open(QIODevice::ReadWrite))
     {
         QTextStream stream( &file );
         stream << exportString << Qt::endl;
     }
 
-    qWarning() << exportString;
     return success;
 }
 

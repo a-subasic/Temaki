@@ -11,8 +11,21 @@ Item {
     id: exportTasksPage
     property var tasks: [] = []
 
+
     Component.onCompleted: {
         initTasks(exportTasksPage.tasks)
+    }
+
+    function getSelectedTasks() {
+        var result = [];
+        for (var j=0; j < tasksModel.count; j++)
+        {
+            if (tasksModel.get(j).selected === true)
+            {
+                result.push(tasksModel.get(j))
+            }
+        }
+        return result;
     }
 
     function initTasks(tasks) {

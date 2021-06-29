@@ -32,6 +32,9 @@ int main(int argc, char *argv[])
 
     app.setWindowIcon(QIcon(":/images/temaki.png"));
 
+    app.setOrganizationName("Temaki");
+    app.setOrganizationDomain("Temaki");
+
     // Database connection
     // Adjust projectFolder name if necessary
     QString projectFolder = "/Temaki";
@@ -54,6 +57,7 @@ int main(int argc, char *argv[])
     engine.rootContext()->setContextProperty("task", &task);
     engine.rootContext()->setContextProperty("label", &label);
 
+    // Enum declarations
     Status::declareQML();
     Label::declareQML();
 
