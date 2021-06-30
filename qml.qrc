@@ -2,7 +2,6 @@
     <qresource prefix="/">
         <file>main.qml</file>
         <file>const.js</file>
-        <file>Home.qml</file>
     </qresource>
     <qresource prefix="/images">
         <file>temaki.png</file>
