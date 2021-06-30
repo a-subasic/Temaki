@@ -92,7 +92,7 @@ Page {
                     Layout.alignment: Qt.AlignRight
                     height: parent.height
                     id: createLabelBtn
-                    visible: user.role_id == User.Editor
+                    visible: user ? user.role_id == User.Editor : false
                     text: "Create new Label"
                     onClicked: {
                         var d = createLabelDialog.createObject(homeScreen, {"parent" : homeScreen});
@@ -199,7 +199,7 @@ Page {
                         id: removeBtn
                         height: parent.height
                         text: "Remove"
-                        visible: user.role_id == User.Editor
+                        visible: user ? user.role_id == User.Editor : false
                         onClicked: {
                             var description = "Are you sure you want to remove label '" + model.name + "'?"
                             var confirmDialog = confirmationComp.createObject(labelsPage, {"dialogDescription" : description});

@@ -107,7 +107,7 @@ Page {
                     anchors.right: parent.right
                     Layout.alignment: Qt.AlignRight
                     height: parent.height
-                    visible: user.role_id == User.Editor
+                    visible: user ? user.role_id == User.Editor : false
                     id: addNewMembersButton
                     text: "Add New Members"
                     onClicked: {
@@ -215,7 +215,7 @@ Page {
                         id: removeBtn
                         height: parent.height
                         text: "Remove"
-                        visible: user.role_id == User.Editor
+                       visible: user ? user.role_id == User.Editor : false
                         onClicked: {
                             var description = "Are you sure you want to remove member '" + model.username + "' from the project?"
                             var confirmDialog = confirmationComp.createObject(membersPage, {"dialogDescription" : description});

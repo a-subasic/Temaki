@@ -39,7 +39,7 @@ Drawer {
             ItemDelegate {
                 text: qsTr("Create new project")
                 width: parent.width
-                visible: user.role_id == User.Editor
+                visible: user ? user.role_id == User.Editor : false
                 onClicked: {
                     var d = createProjectComp.createObject(homeScreen, {"parent" : homeScreen});
                     d.open()
@@ -124,6 +124,7 @@ Drawer {
             width: parent.width/2
             onClicked: fileDialog.open();
         }
+
         Button {
             text: "Export"
             width: parent.width/2

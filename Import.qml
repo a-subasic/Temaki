@@ -45,6 +45,10 @@ Page {
                         user.usernameExists(t.owner))
                     }
                 )
+                if (stackView.depth > 1) {
+                    stackView.pop()
+                }
+                stackView.push("qrc:/Home.qml")
             }
         }
     }

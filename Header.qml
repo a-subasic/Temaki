@@ -6,11 +6,6 @@ Row {
     width: parent.width
     height: 40
 
-    function reset() {
-        user.role_id = 0
-        project.id = -1
-    }
-
     ToolBar {
         id: headerToolbar
         width: parent.width
@@ -50,10 +45,9 @@ Row {
             text: "LOGOUT"
             onClicked: {
                 if (stackView.depth > 1) {
-                    reset()
                     stackView.pop()
                 } else {
-                    reset()
+                    project.id = -1
                     stackView.push("qrc:/Login.qml")
                 }
             }

@@ -159,7 +159,7 @@ Column {
                                 Button {
                                     text: "Edit"
                                     height: 20
-                                    visible: user.role_id == User.Editor
+                                    visible: user ? user.role_id == User.Editor : false
                                     Layout.alignment: Qt.AlignHCenter
 
                                     onClicked: {
