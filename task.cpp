@@ -268,35 +268,33 @@ QList<QVariant> Task::import(const QString& fileName) {
     return result;
 }
 
-bool Task::exportToFile(const QList<QVariantMap> tasks, const QString projectName, const QString filePath) {
-    QDateTime currentDateTime = QDateTime::currentDateTime();
-    QString fileName = projectName + "_" + currentDateTime.toString();
+bool Task::exportToFile(const QString& filePath, const QString& projectName, const QString& title, const QString& spent_time, const QString& estimated_time,
+                        const QString& status, const QString& owner, const QString& label_type, const QString& label_priority) {
+
+    QString currentDate = QDate::currentDate().toString(Qt::ISODate);
+    QString fileName = projectName + "_" + currentDate;
     QString exportString = "";
     bool success = false;
 
-    foreach(QVariantMap task, tasks)
-    {
-        TaskExportObj taskExportObj;
-        taskExportObj.title = task.value("title").toString();
-        taskExportObj.estimated_time = task.value("estimated_time").toInt();
-        taskExportObj.label_priority = task.value("label_priority").toString();
-        taskExportObj.label_type = task.value("label_type").toString();
-        taskExportObj.owner = task.value("owner").toString();
-        taskExportObj.spent_time = task.value("spent_time").toInt();
-        taskExportObj.status = task.value("status").toString();
+    QVariantMap taskMap;
+    taskMap.insert("estimated_time", estimated_time);
+    taskMap.insert("label_priority", label_priority);
+    taskMap.insert("label_type", label_type);
+    taskMap.insert("owner", owner);
+    taskMap.insert("spent_time", spent_time);
+    taskMap.insert("status", status);
+    taskMap.insert("title", title);
 
-        //QVariantMap test = qvariant_cast<TaskExportObj>(task);
+    QVariant taskVariant = QVariant::fromValue(taskMap);
+    QJsonObject taskJson = taskVariant.toJsonObject();
 
-        QVariantMap taskQVariantMap = taskExportObj.TaskExportObj::getVariantMap();
-        QJsonObject taskJsonObject = QJsonObject::fromVariantMap(taskQVariantMap);
-        QString taskString = QJsonDocument(taskJsonObject).toJson(QJsonDocument::Indented).toStdString().c_str();
+    QString taskString = QJsonDocument(taskJson).toJson(QJsonDocument::Indented).toStdString().c_str();
 
-        QString taskStringFormatted = "@begin-task\n" + taskString + "@end-task";
-        exportString = exportString + "\n" + taskStringFormatted + "\n";
-    }
+    QString taskStringFormatted = "@begin-task\n" + taskString + "@end-task";
+    exportString = exportString + "\n" + taskStringFormatted + "\n";
 
-    QFile file(filePath + fileName + ".txt");
-    if (file.open(QIODevice::ReadWrite))
+    QFile file(filePath + "\\" + fileName + ".txt");
+    if (file.open(QIODevice::ReadWrite | QIODevice::Append))
     {
         QTextStream stream( &file );
         stream << exportString << Qt::endl;

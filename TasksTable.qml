@@ -16,23 +16,11 @@ Item {
         initTasks(exportTasksPage.tasks)
     }
 
-    function getSelectedTasks() {
-        var result = [];
-        for (var j=0; j < tasksModel.count; j++)
-        {
-            if (tasksModel.get(j).selected === true)
-            {
-                result.push(tasksModel.get(j))
-            }
-        }
-        return result;
-    }
-
     function initTasks(tasks) {
         exportTasksPage.tasks = tasks;
         tasksModel.clear()
 
-        for(var i in tasks) { // set membersModel values
+        for(var i in tasks) { // set tasksModel values
             tasksModel.append({
                 "title": tasks[i].title,
                 "owner": tasks[i].owner,
@@ -44,6 +32,18 @@ Item {
                 "selected": true,
             })
         }
+    }
+
+    function getSelectedTasks() {
+        var result = [];
+        for (var j=0; j < tasksModel.count; j++)
+        {
+            if (tasksModel.get(j).selected === true)
+            {
+                result.push(tasksModel.get(j))
+            }
+        }
+        return result;
     }
 
     Item {
@@ -123,7 +123,6 @@ Item {
         id: tasksModel
     }
 
-
     /* Task Listview item */
     Component {
         id: tasksListDelegate
@@ -189,7 +188,7 @@ Item {
                         }
 
                         onClicked: {
-                            model.selected = !model.selected;
+                            model.selected = model.selected === true ? false : true;
                         }
                     }
                 }

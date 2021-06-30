@@ -7,38 +7,10 @@
 #include <QSqlError>
 #include <project.h>
 
-class TaskExportObj
-{
-public:
-    QString title;
-    int spent_time;
-    int estimated_time;
-    QString status;
-    QString owner;
-    QString label_type;
-    QString label_priority;
-
-    QVariantMap getVariantMap() {
-      QVariantMap result;
-      result["title"] = QVariant(title);
-      result["spent_time"] = QVariant(spent_time);
-      result["estimated_time"] = QVariant(estimated_time);
-      result["status"] = QVariant(status);
-      result["owner"] = QVariant(owner);
-      result["label_type"] = QVariant(label_type);
-      result["label_priority"] = QVariant(label_priority);
-
-      return result;
-    }
-
-};
-Q_DECLARE_METATYPE(TaskExportObj);
-
 class Task : public QObject
 {
     Q_OBJECT
     Q_PROPERTY(QVariant project_tasks READ project_tasks WRITE setProjectTasks NOTIFY projectTasksChanged)
-
 public:
     explicit Task(QObject *parent = nullptr);
     QVariant project_tasks() const {
@@ -69,7 +41,9 @@ public slots:
     QVariant create(const QString& title, const int& project_id, const int& estimatedTime, const int& spentTime = 0,const int& statusId = TaskStatus::Backlog, const int& labelTypeId = 0, const int& labelPriorityId = 0, const int& ownerId = 0);
     bool update(const int& project_id, const int& taskId, const QString& title, const int& estimatedTime, const int& spentTime, const int& labelTypeId = 0, const int& labelPriorityId = 0, const int& ownerId = 0);
     QList<QVariant> import(const QString& fileName);
-    bool exportToFile(const QList<QVariantMap> tasks, const QString projectName, const QString filePath);
+    //bool exportToFile(const QList<QObject*> tasks, const QString projectName, const QString filePath);
+    bool exportToFile(const QString& projectName, const QString& filePath, const QString& title, const QString& spent_time, const QString& estimated_time,
+                      const QString& status, const QString& owner, const QString& label_type, const QString& label_priority);
     int statusExists(const QString& name);
 };
 

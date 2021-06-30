@@ -44,8 +44,11 @@ Page {
             path = path.replace(/^(file:\/{3})/,"");
             var cleanPath = decodeURIComponent(path);
 
-            var tasksToExport = tasksTable.getSelectedTasks().map(function(obj) { if (obj.selected) return obj;})
-            task.exportToFile(tasksToExport, project.name, cleanPath)
+            var tasksToExport = tasksTable.getSelectedTasks()
+
+            tasksToExport.forEach(t => {
+                task.exportToFile(cleanPath, project.name, t.title, t.spent_time, t.estimated_time, t.satus, t.owner, t.label_type, t.label_priority)
+            })
         }
     }
 
