@@ -210,7 +210,7 @@ Page {
                     Layout.alignment: Qt.AlignLeft
                     width: parent.width * 0.25
                     Layout.fillHeight: true
-                    Component.onCompleted: { if(user.id == model.id) removeBtn.visible = false }
+                    Component.onCompleted: { if(user.id === model.id) removeBtn.visible = false }
                     Button {
                         id: removeBtn
                         height: parent.height

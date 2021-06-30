@@ -7,6 +7,7 @@ import "qrc:/pages" as Pages
 import "qrc:/editors" as CreateProject
 
 Page {
+    property string screenName: "Board"
     id: homeScreen
     visible: true
 

@@ -69,14 +69,17 @@ Drawer {
                 text: qsTr("Board")
                 width: parent.width
                 onClicked: {
+                    homeScreen.screenName = "Board"
                     bodyStackView.push("qrc:/pages/Board.qml")
                     sidebarDrawer.close()
                 }
             }
+
             ItemDelegate {
                 text: qsTr("Members")
                 width: parent.width
                 onClicked: {
+                    homeScreen.screenName = "Members"
                     bodyStackView.push("qrc:/pages/Members.qml")
                     sidebarDrawer.close()
                 }
@@ -85,6 +88,7 @@ Drawer {
                 text: qsTr("Labels")
                 width: parent.width
                 onClicked: {
+                    homeScreen.screenName = "Labels"
                     bodyStackView.push("qrc:/pages/Labels.qml")
                     sidebarDrawer.close()
                 }

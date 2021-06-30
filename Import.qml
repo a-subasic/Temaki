@@ -27,12 +27,11 @@ Page {
 
         Button {
             anchors.rightMargin: 25
-//            anchors.top: tasksTable.bottom
             anchors.right: parent.right
             Layout.alignment: Qt.AlignRight
             text: "Import"
             onClicked: {
-                var importTasks= tasksTable.getSelectedTasks();
+                var importTasks = tasksTable.getSelectedTasks();
 
                 importTasks.forEach(t => {
                     task.create(

@@ -6,6 +6,11 @@ Row {
     width: parent.width
     height: 40
 
+    function reset() {
+        user.role_id = 0
+        project.id = -1
+    }
+
     ToolBar {
         id: headerToolbar
         width: parent.width
@@ -24,7 +29,7 @@ Row {
         }
 
         Label {
-            text: "todo: Screen name"
+            text: homeScreen.screenName
             anchors.left: toolButton.right
             anchors.verticalCenter: parent.verticalCenter
         }
@@ -45,10 +50,10 @@ Row {
             text: "LOGOUT"
             onClicked: {
                 if (stackView.depth > 1) {
-                    user.role_id = 0
-                    project.id = -1
+                    reset()
                     stackView.pop()
                 } else {
+                    reset()
                     stackView.push("qrc:/Login.qml")
                 }
             }
