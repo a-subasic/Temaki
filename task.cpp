@@ -245,13 +245,10 @@ QList<QVariant> Task::import(const QString& fileName) {
             QJsonObject obj = doc.object();
 
             QVariantMap map;
-            map.insert("estimated_time", obj["estimated_time"].toString());
-            map.insert("label_priority", obj["label_priority"].toString());
-            map.insert("label_type", obj["label_type"].toString());
-            map.insert("owner", obj["owner"].toString());
-            map.insert("spent_time", obj["spent_time"].toString());
-            map.insert("status", obj["status"].toString());
-            map.insert("title", obj["title"].toString());
+            foreach(const QString& key, obj.keys()) {
+                QJsonValue value = obj.value(key);
+                map.insert(key, value);
+            }
 
             result.append(QVariant::fromValue(map));
 

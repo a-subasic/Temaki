@@ -7,6 +7,7 @@ import MyQMLEnums 13.37
 
 import "qrc:/editors" as Editors
 import "qrc:/pages/" as Pages
+import "qrc:/components/" as Components
 
 Drawer {
     id: sidebarDrawer
@@ -122,7 +123,14 @@ Drawer {
         Button {
             text: "Import"
             width: parent.width/2
-            onClicked: fileDialog.open();
+            onClicked: {
+                if(project.id != -1) {
+                    fileDialog.open();
+                }
+                else {
+                    infoDialog.open();
+                }
+            }
         }
 
         Button {
@@ -132,6 +140,9 @@ Drawer {
                 if (project.id != -1) {
                     bodyStackView.push("qrc:/pages/Export.qml")
                     sidebarDrawer.close()
+                }
+                else {
+                    infoDialog.open()
                 }
             }
         }

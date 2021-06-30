@@ -5,11 +5,18 @@ import QtQuick.Controls 2.14
 import "qrc:/layouts" as Layouts
 import "qrc:/pages" as Pages
 import "qrc:/editors" as CreateProject
+import "qrc:/components/" as Components
 
 Page {
     property string screenName: "Board"
     id: homeScreen
     visible: true
+
+    Components.InfoDialog {
+        id: infoDialog
+        title: "Info"
+        description: "Please select a project"
+    }
 
     /* Header */
     Layouts.Header {
