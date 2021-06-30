@@ -54,7 +54,6 @@ QVariant Project::create(const QString& name, const QList<int>& memberIds, const
 
 QList<QVariant> Project::getAllForUser(int userId) {
     QList<QVariant> result;
-    qInfo() << userId;
 
     QSqlQuery query;
     query.prepare("SELECT id, name FROM Project WHERE id IN (SELECT project_id FROM ProjectMembers WHERE user_id = :userId)");

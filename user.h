@@ -74,14 +74,13 @@ signals:
 private:
     int m_id;
     QString m_username;
-    int m_role_id = 0;
+    int m_role_id;
     QList<QVariant> m_project_members;
 
 public slots:
     QVariant login(const QString& username, const QString& password);
     QVariant signUp(const QString& username, const QString& email, const QString& password, const int& roleId);
     QList<QVariant> search(const QString& entry, const QStringList& ignoreUserIds = QStringList()); /* search users by username/email and return User list */
-    bool create();
     QList<QVariant> getProjectMembers(int projectId); /* get all users (project members) from project_id */
     bool removeProjectMember(int projectId, int userId);
     bool addProjectMembers(int projectId, const QStringList& userIds);

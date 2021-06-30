@@ -103,27 +103,6 @@ QList<QVariant> User::search(const QString& entry, const QStringList& ignoreUser
     return result;
 }
 
-bool User::create() {
-
-    QSqlQuery query;
-    query.prepare("INSERT INTO User (username, email, password, role_id) VALUES ('testt', 'testt@gmail.com', 'test', 1)");
-
-    if(!query.exec()) {
-        qWarning() << "Failed to execute login query";
-    }
-    else {
-        qWarning() << "fdfdfd";
-
-        while(query.next()) {
-            qInfo() << "aaa";
-            qWarning() << "fdfdfd";
-            qInfo() << query.value(0).toInt();
-        }
-    }
-
-    return true;
-}
-
 QList<QVariant> User::getProjectMembers(int projectId) {
     QList<QVariant> result;
 
