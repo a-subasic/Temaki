@@ -9,8 +9,6 @@ import "qrc:/editors" as CreateProject
 Page {
     id: homeScreen
     visible: true
-//    width: parent.width;
-//    height: parent.height;
 
     /* Header */
     Layouts.Header {
