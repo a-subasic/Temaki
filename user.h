@@ -74,7 +74,7 @@ signals:
 private:
     int m_id;
     QString m_username;
-    int m_role_id;
+    int m_role_id = 0;
     QList<QVariant> m_project_members;
 
 public slots:

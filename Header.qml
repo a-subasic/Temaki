@@ -45,6 +45,8 @@ Row {
             text: "LOGOUT"
             onClicked: {
                 if (stackView.depth > 1) {
+                    user.role_id = 0
+                    project.id = -1
                     stackView.pop()
                 } else {
                     stackView.push("qrc:/Login.qml")
