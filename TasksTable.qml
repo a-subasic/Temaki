@@ -46,18 +46,6 @@ Item {
         }
     }
 
-    function getSelectedTasks() {
-        var result = [];
-        for (var j=0; j < tasksModel.count; j++)
-        {
-            if (tasksModel.get(j).selected === true)
-            {
-                result.push(tasksModel.get(j))
-            }
-        }
-        return result;
-    }
-
     Item {
         width: parent.width
         height: parent.height

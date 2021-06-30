@@ -34,5 +34,4 @@ HEADERS += \
     user.h
 
 DISTFILES += \
-    ../../../../Downloads/json-develop.zip \
     Members.qml

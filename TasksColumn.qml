@@ -159,7 +159,8 @@ Column {
                                 Button {
                                     text: "Edit"
                                     height: 20
-                                     Layout.alignment: Qt.AlignHCenter
+                                    visible: user.role_id == User.Editor
+                                    Layout.alignment: Qt.AlignHCenter
 
                                     onClicked: {
                                         var d = editTaskComponent.createObject(homeScreen, { "parent" : homeScreen, "currentTask": myData });

@@ -58,6 +58,7 @@ int main(int argc, char *argv[])
     engine.rootContext()->setContextProperty("label", &label);
 
     // Enum declarations
+    User::declareQML();
     Status::declareQML();
     Label::declareQML();
 

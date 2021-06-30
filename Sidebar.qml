@@ -3,6 +3,7 @@ import QtQuick.Controls 2.15
 import QtQuick.Layouts 1.3
 import QtQml.Models 2.1
 import QtQuick.Dialogs 1.0
+import MyQMLEnums 13.37
 
 import "qrc:/editors" as Editors
 import "qrc:/pages/" as Pages
@@ -38,6 +39,7 @@ Drawer {
             ItemDelegate {
                 text: qsTr("Create new project")
                 width: parent.width
+                visible: user.role_id == User.Editor
                 onClicked: {
                     var d = createProjectComp.createObject(homeScreen, {"parent" : homeScreen});
                     d.open()
@@ -84,14 +86,6 @@ Drawer {
                 width: parent.width
                 onClicked: {
                     bodyStackView.push("qrc:/pages/Labels.qml")
-                    sidebarDrawer.close()
-                }
-            }
-            ItemDelegate {
-                text: qsTr("Analytics")
-                width: parent.width
-                onClicked: {
-                    bodyStackView.push("qrc:/pages/Analytics.qml")
                     sidebarDrawer.close()
                 }
             }

@@ -14,7 +14,6 @@
         <file>Login.qml</file>
         <file>Register.qml</file>
         <file>Board.qml</file>
-        <file>Analytics.qml</file>
         <file>Labels.qml</file>
         <file>Members.qml</file>
         <file>Import.qml</file>

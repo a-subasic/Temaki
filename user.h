@@ -5,6 +5,7 @@
 #include <QDebug>
 #include <QSqlQuery>
 #include <QSqlError>
+#include <QQmlEngine>
 
 class User : public QObject
 {
@@ -17,10 +18,14 @@ class User : public QObject
 public:
     explicit User(QObject *parent = nullptr);
     enum UserRole {
-      Editor,
-      Viewer
+      Editor = 1,
+      Viewer = 2
     };
     Q_ENUM(UserRole)
+
+    static void declareQML() {
+        qmlRegisterType<User>("MyQMLEnums", 13, 37, "User");
+    }
     void setId(const int id) {
         if (id != m_id) {
             m_id = id;

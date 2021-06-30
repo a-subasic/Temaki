@@ -189,6 +189,7 @@ Page {
                     anchors.right: parent.right
                     Layout.alignment: Qt.AlignRight
                     id: buttonAbout
+                    visible: user.role_id == User.Editor
                     text: "Create task"
                     onClicked: {
                         var d = createTaskComp.createObject(homeScreen, {"parent" : homeScreen});
